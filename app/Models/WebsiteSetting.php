@@ -187,18 +187,25 @@ class WebsiteSetting extends Model
     public function themeCssVariables(): string
     {
         $theme = $this->theme();
-        $rgb = $this->hexToRgb($theme['primary']);
+        $primaryRgb = $this->hexToRgb($theme['primary']);
+        $lightRgb = $this->hexToRgb($theme['light']);
 
         return implode(
             '',
             [
                 '--primary-color: '.$theme['primary'].';',
-                '--primary-color-rgb: '.$rgb.';',
+                '--primary-color-rgb: '.$primaryRgb.';',
+                '--secondary-color: '.$theme['light'].';',
+                '--secondary-color-rgb: '.$lightRgb.';',
                 '--theme-primary: '.$theme['primary'].';',
                 '--theme-dark: '.$theme['dark'].';',
                 '--theme-light: '.$theme['light'].';',
                 '--bg-dark-1: '.$theme['primary'].';',
+                '--bg-dark-1-rgb: '.$primaryRgb.';',
+                '--bg-dark-2: '.$theme['dark'].';',
+                '--bg-dark-3: '.$theme['dark'].';',
                 '--id-color: '.$theme['primary'].';',
+                '--btn-hover-bg: '.$theme['dark'].';',
             ]
         );
     }

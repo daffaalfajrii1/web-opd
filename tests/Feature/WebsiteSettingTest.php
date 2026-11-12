@@ -153,6 +153,8 @@ class WebsiteSettingTest extends TestCase
         $home = $this->get(route('home'));
         $home->assertOk();
         $home->assertSee('--theme-primary: #b91c1c', false);
+        $home->assertSee('--bg-dark-1: #b91c1c', false);
+        $home->assertSee(':root,', false);
     }
 
     public function test_not_found_page_uses_branded_layout(): void

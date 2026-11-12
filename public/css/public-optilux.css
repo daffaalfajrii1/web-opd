@@ -18,6 +18,12 @@ body.page-beranda main {
     flex: 1 0 auto;
 }
 
+body.page-beranda footer,
+footer.section-dark,
+footer {
+    background: var(--theme-primary, var(--bg-dark-1, #005461)) !important;
+}
+
 body.page-beranda footer {
     flex-shrink: 0;
     margin-top: auto;
