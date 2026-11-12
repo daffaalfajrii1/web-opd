@@ -11,6 +11,7 @@
     <link href="{{ asset('optilux/css/coloring.css') }}" rel="stylesheet" type="text/css">
     <link id="colors" href="{{ asset('optilux/css/colors/scheme-01.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('css/public-optilux.css') }}" rel="stylesheet" type="text/css">
+    @include('partials.theme-vars')
     @stack('styles')
 </head>
 <body @class(['page-beranda' => request()->routeIs('home')])>

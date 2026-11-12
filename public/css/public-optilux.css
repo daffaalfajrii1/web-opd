@@ -296,7 +296,7 @@ header.header-light #mainmenu > li.has-child::after {
 /* Hero beranda */
 .kecamatan-hero {
     position: relative;
-    background: linear-gradient(135deg, #003d47 0%, #005461 42%, #007d91 100%);
+    background: linear-gradient(135deg, var(--theme-dark, #003d47) 0%, var(--theme-primary, #005461) 42%, var(--theme-light, #007d91) 100%);
     color: #fff;
     overflow: hidden;
 }

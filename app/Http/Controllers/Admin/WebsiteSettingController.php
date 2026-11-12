@@ -124,6 +124,7 @@ class WebsiteSettingController extends Controller
         return [
             'site_name' => ['required', 'string', 'max:120'],
             'site_tagline' => ['nullable', 'string', 'max:255'],
+            'theme_color' => ['required', 'string', Rule::in(WebsiteSetting::themeKeys())],
             'logo' => ['nullable', 'image', 'max:2048'],
             'remove_logo' => ['nullable', 'boolean'],
             'favicon' => ['nullable', 'image', 'max:1024'],
@@ -174,6 +175,7 @@ class WebsiteSettingController extends Controller
         return [
             'site_name' => 'nama website',
             'site_tagline' => 'tagline',
+            'theme_color' => 'warna tema',
             'logo' => 'logo',
             'favicon' => 'favicon',
             'carousel_duration' => 'durasi carousel',

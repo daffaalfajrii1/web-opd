@@ -15,6 +15,7 @@
     @stack('styles')
     <link rel="stylesheet" href="{{ $duralux }}/css/theme.min.css" />
     <link rel="stylesheet" href="{{ asset('css/admin-kecamatan.css') }}" />
+    @include('partials.theme-vars')
 </head>
 <body class="kecamatan-panel-body">
     @include('admin.layouts.partials.sidebar')

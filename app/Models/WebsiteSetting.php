@@ -20,9 +20,22 @@ class WebsiteSetting extends Model
 
     public const CAROUSEL_DURATION_DEFAULT = 5;
 
+    public const THEME_TEAL = 'teal';
+
+    public const THEME_ORANGE = 'orange';
+
+    public const THEME_RED = 'red';
+
+    public const THEME_GREEN = 'green';
+
+    public const THEME_BLUE = 'blue';
+
+    public const THEME_NAVY = 'navy';
+
     protected $fillable = [
         'site_name',
         'site_tagline',
+        'theme_color',
         'logo_path',
         'favicon_path',
         'carousel_enabled',
@@ -68,12 +81,66 @@ class WebsiteSetting extends Model
         Cache::forget('public_profil_pages');
     }
 
+    /**
+     * Preset warna tema siap pakai.
+     *
+     * @return array<string, array{label: string, primary: string, dark: string, light: string}>
+     */
+    public static function themes(): array
+    {
+        return [
+            self::THEME_TEAL => [
+                'label' => 'Teal',
+                'primary' => '#005461',
+                'dark' => '#003d47',
+                'light' => '#007d91',
+            ],
+            self::THEME_ORANGE => [
+                'label' => 'Oranye',
+                'primary' => '#c2410c',
+                'dark' => '#9a3412',
+                'light' => '#ea580c',
+            ],
+            self::THEME_RED => [
+                'label' => 'Merah',
+                'primary' => '#b91c1c',
+                'dark' => '#7f1d1d',
+                'light' => '#dc2626',
+            ],
+            self::THEME_GREEN => [
+                'label' => 'Hijau',
+                'primary' => '#166534',
+                'dark' => '#14532d',
+                'light' => '#22c55e',
+            ],
+            self::THEME_BLUE => [
+                'label' => 'Biru',
+                'primary' => '#1d4ed8',
+                'dark' => '#1e3a8a',
+                'light' => '#3b82f6',
+            ],
+            self::THEME_NAVY => [
+                'label' => 'Navy',
+                'primary' => '#1e3a5f',
+                'dark' => '#0f2744',
+                'light' => '#2f5f98',
+            ],
+        ];
+    }
+
+    /** @return list<string> */
+    public static function themeKeys(): array
+    {
+        return array_keys(self::themes());
+    }
+
     /** @return array<string, mixed> */
     public static function defaults(): array
     {
         return [
             'site_name' => 'Web OPD Rejang Lebong',
             'site_tagline' => 'Website Resmi OPD Kabupaten Rejang Lebong',
+            'theme_color' => self::THEME_TEAL,
             'marquee_enabled' => true,
             'marquee_mode' => self::MARQUEE_CUSTOM,
             'marquee_text' => 'Selamat datang di website resmi OPD Kabupaten Rejang Lebong.',
@@ -102,6 +169,38 @@ class WebsiteSetting extends Model
     public function shortName(): string
     {
         return $this->siteName();
+    }
+
+    public function themeKey(): string
+    {
+        $key = (string) ($this->theme_color ?: self::THEME_TEAL);
+
+        return array_key_exists($key, self::themes()) ? $key : self::THEME_TEAL;
+    }
+
+    /** @return array{label: string, primary: string, dark: string, light: string} */
+    public function theme(): array
+    {
+        return self::themes()[$this->themeKey()];
+    }
+
+    public function themeCssVariables(): string
+    {
+        $theme = $this->theme();
+        $rgb = $this->hexToRgb($theme['primary']);
+
+        return implode(
+            '',
+            [
+                '--primary-color: '.$theme['primary'].';',
+                '--primary-color-rgb: '.$rgb.';',
+                '--theme-primary: '.$theme['primary'].';',
+                '--theme-dark: '.$theme['dark'].';',
+                '--theme-light: '.$theme['light'].';',
+                '--bg-dark-1: '.$theme['primary'].';',
+                '--id-color: '.$theme['primary'].';',
+            ]
+        );
     }
 
     public function defaultShareImageUrl(): string
@@ -184,5 +283,19 @@ class WebsiteSetting extends Model
         }
 
         return 'https://wa.me/'.$number;
+    }
+
+    private function hexToRgb(string $hex): string
+    {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+
+        if (strlen($hex) !== 6 || ! ctype_xdigit($hex)) {
+            return '0, 84, 97';
+        }
+
+        return hexdec(substr($hex, 0, 2)).', '.hexdec(substr($hex, 2, 2)).', '.hexdec(substr($hex, 4, 2));
     }
 }

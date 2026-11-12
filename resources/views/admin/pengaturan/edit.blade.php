@@ -39,6 +39,33 @@
 
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-transparent border-bottom">
+                            <h5 class="mb-0"><i class="feather-droplet me-2 text-primary"></i>Warna Tema Website</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted fs-13 mb-3">Pilih warna siap pakai. Berlaku ke beranda, tombol, login, dan halaman publik.</p>
+                            <div class="kecamatan-theme-picker" role="radiogroup" aria-label="Warna tema website">
+                                @foreach (\App\Models\WebsiteSetting::themes() as $key => $theme)
+                                    @php $checked = old('theme_color', $settings->theme_color ?: 'teal') === $key; @endphp
+                                    <label class="kecamatan-theme-option {{ $checked ? 'is-active' : '' }}">
+                                        <input
+                                            type="radio"
+                                            name="theme_color"
+                                            value="{{ $key }}"
+                                            class="kecamatan-theme-option__input"
+                                            @checked($checked)
+                                            required
+                                        >
+                                        <span class="kecamatan-theme-option__swatch" style="background: linear-gradient(135deg, {{ $theme['dark'] }} 0%, {{ $theme['primary'] }} 50%, {{ $theme['light'] }} 100%);"></span>
+                                        <span class="kecamatan-theme-option__label">{{ $theme['label'] }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('theme_color')<div class="text-danger fs-12 mt-2">{{ $message }}</div>@enderror
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent border-bottom">
                             <h5 class="mb-0"><i class="feather-image me-2 text-primary"></i>Logo & Favicon</h5>
                         </div>
                         <div class="card-body">

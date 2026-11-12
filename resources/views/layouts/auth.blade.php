@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ $duralux }}/vendors/css/vendors.min.css">
     <link rel="stylesheet" href="{{ $duralux }}/css/theme.min.css">
     <link rel="stylesheet" href="{{ asset('css/admin-kecamatan.css') }}">
+    @include('partials.theme-vars')
 </head>
 <body class="kecamatan-auth-body">
     <main class="kecamatan-auth-page">

@@ -57,6 +57,7 @@ class WebsiteSettingTest extends TestCase
         $response = $this->actingAs($this->settingsManager())->put(route('admin.pengaturan.update'), [
             'site_name' => 'Satpol PP Rejang Lebong Baru',
             'site_tagline' => 'Melayani dengan hati',
+            'theme_color' => WebsiteSetting::THEME_ORANGE,
             'carousel_duration' => 8,
             'carousel_enabled' => '1',
             'marquee_mode' => WebsiteSetting::MARQUEE_CUSTOM,
@@ -73,6 +74,7 @@ class WebsiteSettingTest extends TestCase
         $settings = WebsiteSetting::query()->first();
         $this->assertSame('Satpol PP Rejang Lebong Baru', $settings->site_name);
         $this->assertSame('Melayani dengan hati', $settings->site_tagline);
+        $this->assertSame(WebsiteSetting::THEME_ORANGE, $settings->theme_color);
     }
 
     public function test_public_home_uses_dynamic_site_name(): void
@@ -94,6 +96,7 @@ class WebsiteSettingTest extends TestCase
 
         $response = $this->actingAs($this->settingsManager())->put(route('admin.pengaturan.update'), [
             'site_name' => 'Web OPD Rejang Lebong',
+            'theme_color' => WebsiteSetting::THEME_TEAL,
             'carousel_duration' => 5,
             'marquee_mode' => WebsiteSetting::MARQUEE_CUSTOM,
             'logo' => UploadedFile::fake()->image('logo.png', 200, 200),
@@ -130,6 +133,41 @@ class WebsiteSettingTest extends TestCase
         $delete->assertRedirect(route('admin.pengaturan.edit'));
         $this->assertSame(1, WebsiteCarousel::count());
         Storage::disk('public')->assertMissing($carousel->image_path);
+    }
+
+    public function test_settings_manager_can_change_theme_color(): void
+    {
+        WebsiteSetting::query()->create(WebsiteSetting::defaults());
+
+        $response = $this->actingAs($this->settingsManager())->put(route('admin.pengaturan.update'), [
+            'site_name' => 'Web OPD Rejang Lebong',
+            'theme_color' => WebsiteSetting::THEME_RED,
+            'carousel_duration' => 5,
+            'marquee_mode' => WebsiteSetting::MARQUEE_CUSTOM,
+        ]);
+
+        $response->assertRedirect(route('admin.pengaturan.edit'));
+        $this->assertSame(WebsiteSetting::THEME_RED, WebsiteSetting::query()->first()->theme_color);
+
+        WebsiteSetting::clearCache();
+        $home = $this->get(route('home'));
+        $home->assertOk();
+        $home->assertSee('--theme-primary: #b91c1c', false);
+    }
+
+    public function test_not_found_page_uses_branded_layout(): void
+    {
+        WebsiteSetting::query()->create(array_merge(WebsiteSetting::defaults(), [
+            'site_name' => 'BPKD Rejang Lebong',
+        ]));
+        WebsiteSetting::clearCache();
+
+        $response = $this->get('/halaman-yang-tidak-ada-xyz');
+
+        $response->assertNotFound();
+        $response->assertSee('Halaman tidak ditemukan');
+        $response->assertSee('BPKD Rejang Lebong');
+        $response->assertSee('Kembali ke Beranda');
     }
 
     public function test_public_home_shows_carousel_when_enabled(): void
