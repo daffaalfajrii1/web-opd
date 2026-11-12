@@ -65,18 +65,29 @@ class WebsiteSetting extends Model
 
     public static function current(): self
     {
-        return Cache::remember('website_settings', 3600, function () {
-            if (! Schema::hasTable('website_settings')) {
-                return new self(self::defaults());
-            }
+        if (! Schema::hasTable('website_settings')) {
+            return new self(self::defaults());
+        }
 
-            return self::query()->first() ?? self::query()->create(self::defaults());
+        // Cache array (bukan model) agar aman di hosting multi-PHP / cache lama.
+        $payload = Cache::remember('website_settings.v2', 600, function () {
+            $row = self::query()->first() ?? self::query()->create(self::defaults());
+
+            return $row->attributesToArray();
         });
+
+        $settings = new self;
+        $settings->forceFill($payload);
+        $settings->exists = true;
+        $settings->syncOriginal();
+
+        return $settings;
     }
 
     public static function clearCache(): void
     {
         Cache::forget('website_settings');
+        Cache::forget('website_settings.v2');
         Cache::forget('website_carousels_active');
         Cache::forget('public_profil_pages');
     }

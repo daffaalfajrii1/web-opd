@@ -7,6 +7,7 @@ use App\Models\WebsiteCarousel;
 use App\Models\WebsiteSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -15,8 +16,11 @@ class WebsiteSettingController extends Controller
 {
     public function edit(): View
     {
+        // Baca langsung dari DB agar pilihan tema di form selalu akurat.
+        $settings = WebsiteSetting::query()->firstOrCreate(['id' => 1], WebsiteSetting::defaults());
+
         return view('admin.pengaturan.edit', [
-            'settings' => WebsiteSetting::current(),
+            'settings' => $settings,
             'carousels' => WebsiteCarousel::query()->ordered()->get(),
         ]);
     }
@@ -57,9 +61,15 @@ class WebsiteSettingController extends Controller
         $settings->update($data);
         WebsiteSetting::clearCache();
 
+        try {
+            Artisan::call('view:clear');
+        } catch (\Throwable) {
+            // Abaikan jika hosting membatasi artisan dari web.
+        }
+
         return redirect()
             ->route('admin.pengaturan.edit')
-            ->with('success', 'Pengaturan website berhasil disimpan.');
+            ->with('success', 'Pengaturan website berhasil disimpan. Hard refresh beranda (Ctrl+F5) jika warna belum berubah.');
     }
 
     public function storeCarousel(Request $request): RedirectResponse

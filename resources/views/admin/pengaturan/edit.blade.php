@@ -43,20 +43,21 @@
                         </div>
                         <div class="card-body">
                             <p class="text-muted fs-13 mb-3">Pilih warna siap pakai. Berlaku ke beranda, tombol, login, dan halaman publik.</p>
-                            <div class="kecamatan-theme-picker" role="radiogroup" aria-label="Warna tema website">
+                            <div class="kecamatan-theme-picker" role="radiogroup" aria-label="Warna tema website" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.75rem;">
                                 @foreach (\App\Models\WebsiteSetting::themes() as $key => $theme)
                                     @php $checked = old('theme_color', $settings->theme_color ?: 'teal') === $key; @endphp
-                                    <label class="kecamatan-theme-option {{ $checked ? 'is-active' : '' }}">
+                                    <label class="kecamatan-theme-option {{ $checked ? 'is-active' : '' }}" style="display:flex;flex-direction:column;align-items:center;gap:.5rem;margin:0;padding:.75rem .5rem;border:2px solid {{ $checked ? $theme['primary'] : '#e2e8f0' }};border-radius:.85rem;background:#fff;cursor:pointer;{{ $checked ? 'box-shadow:0 0 0 3px rgba(0,0,0,.08);' : '' }}">
                                         <input
                                             type="radio"
                                             name="theme_color"
                                             value="{{ $key }}"
                                             class="kecamatan-theme-option__input"
+                                            style="position:absolute;opacity:0;pointer-events:none;"
                                             @checked($checked)
                                             required
                                         >
-                                        <span class="kecamatan-theme-option__swatch" style="background: linear-gradient(135deg, {{ $theme['dark'] }} 0%, {{ $theme['primary'] }} 50%, {{ $theme['light'] }} 100%);"></span>
-                                        <span class="kecamatan-theme-option__label">{{ $theme['label'] }}</span>
+                                        <span class="kecamatan-theme-option__swatch" style="display:block;width:100%;height:42px;border-radius:.55rem;background:linear-gradient(135deg, {{ $theme['dark'] }} 0%, {{ $theme['primary'] }} 50%, {{ $theme['light'] }} 100%);"></span>
+                                        <span class="kecamatan-theme-option__label" style="font-size:.8rem;font-weight:600;color:#334155;">{{ $theme['label'] }}</span>
                                     </label>
                                 @endforeach
                             </div>
