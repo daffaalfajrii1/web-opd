@@ -24,6 +24,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage pegawai',
             'manage pengumuman',
             'manage layanan',
+            'manage pengaduan',
             'manage pengaturan',
         ];
 
@@ -54,6 +55,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage pegawai',
             'manage pengumuman',
             'manage layanan',
+            'manage pengaduan',
         ]);
 
         $editor = Role::firstOrCreate([

@@ -1178,3 +1178,48 @@ header.header-light #mainmenu > li.has-child::after {
     color: #adb5bd;
     background: #f8f9fa;
 }
+
+/* Floating Pengaduan */
+.pengaduan-fab {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 1040;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.15rem;
+    border-radius: 999px;
+    background: var(--theme-primary, var(--primary-color, #005461));
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pengaduan-fab:hover {
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+}
+
+.pengaduan-fab i {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+@media (max-width: 575.98px) {
+    .pengaduan-fab span {
+        display: none;
+    }
+
+    .pengaduan-fab {
+        width: 3.25rem;
+        height: 3.25rem;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+    }
+}

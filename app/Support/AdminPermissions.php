@@ -19,6 +19,7 @@ class AdminPermissions
         'manage pegawai' => 'Kelola pegawai & jabatan',
         'manage pengumuman' => 'Kelola pengumuman',
         'manage layanan' => 'Kelola layanan publik',
+        'manage pengaduan' => 'Kelola pengaduan publik',
         'manage pengaturan' => 'Kelola pengaturan website',
     ];
 
@@ -56,6 +57,7 @@ class AdminPermissions
                 'manage pegawai',
                 'manage pengumuman',
                 'manage layanan',
+                'manage pengaduan',
             ],
         ],
         User::ROLE_EDITOR => [

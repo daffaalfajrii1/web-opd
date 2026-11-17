@@ -9,6 +9,7 @@ use App\Http\Controllers\Public\KontakController;
 use App\Http\Controllers\Public\LayananController;
 use App\Http\Controllers\Public\PageController as PublicPageController;
 use App\Http\Controllers\Public\PegawaiController as PublicPegawaiController;
+use App\Http\Controllers\Public\PengaduanController;
 use App\Http\Controllers\Public\PengumumanController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,19 @@ Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('public.
 Route::post('/layanan/{slug}', [LayananController::class, 'store'])
     ->middleware('throttle:public-form')
     ->name('public.layanan.store');
+
+Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('public.pengaduan.index');
+Route::get('/pengaduan/cek-status', [PengaduanController::class, 'checkStatus'])->name('public.pengaduan.check-status');
+Route::post('/pengaduan/cek-status', [PengaduanController::class, 'lookupStatus'])
+    ->middleware('throttle:public-form')
+    ->name('public.pengaduan.lookup-status');
+Route::post('/pengaduan/feedback', [PengaduanController::class, 'storeFeedback'])
+    ->middleware('throttle:public-form')
+    ->name('public.pengaduan.feedback');
+Route::get('/pengaduan/{slug}', [PengaduanController::class, 'show'])->name('public.pengaduan.show');
+Route::post('/pengaduan/{slug}', [PengaduanController::class, 'store'])
+    ->middleware('throttle:public-form')
+    ->name('public.pengaduan.store');
 
 Route::get('/kontak', [KontakController::class, 'index'])->name('public.kontak.index');
 

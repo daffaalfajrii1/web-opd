@@ -50,6 +50,19 @@
                                         </ul>
                                     </li>
                                     <li><a class="menu-item" href="{{ route('public.pegawai.index') }}">Pegawai</a></li>
+                                    <li class="has-child">
+                                        <a class="menu-item" href="{{ route('public.pengaduan.index') }}">Pengaduan</a>
+                                        <ul>
+                                            @forelse ($pengaduanKategoris as $pengaduanKategori)
+                                                <li>
+                                                    <a href="{{ route('public.pengaduan.show', $pengaduanKategori->slug) }}">{{ $pengaduanKategori->name }}</a>
+                                                </li>
+                                            @empty
+                                                <li><a href="{{ route('public.pengaduan.index') }}">Semua Kategori</a></li>
+                                            @endforelse
+                                            <li><a href="{{ route('public.pengaduan.check-status') }}">Cek Status</a></li>
+                                        </ul>
+                                    </li>
                                     <li><a class="menu-item" href="{{ route('public.kontak.index') }}">Kontak</a></li>
                                 </ul>
                             </div>
