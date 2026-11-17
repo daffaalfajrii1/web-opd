@@ -39,6 +39,11 @@
         @include('public.partials.optilux.footer')
     </div>
 
+    <a href="{{ route('public.pengaduan.index') }}" class="pengaduan-fab" title="Pengaduan" aria-label="Buka halaman pengaduan">
+        <i class="icofont-megaphone" aria-hidden="true"></i>
+        <span>Pengaduan</span>
+    </a>
+
     <script src="{{ asset('optilux/js/plugins.js') }}"></script>
     <script src="{{ asset('optilux/js/designesia.js') }}"></script>
     @stack('scripts')

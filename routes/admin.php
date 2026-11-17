@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\LayananController;
 use App\Http\Controllers\Admin\LayananPengajuanController;
+use App\Http\Controllers\Admin\PengaduanController;
+use App\Http\Controllers\Admin\PengaduanKategoriController;
 use App\Http\Controllers\Admin\PengumumanController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -97,6 +99,25 @@ Route::middleware(['auth', 'verified', PermissionMiddleware::using('view dashboa
                 Route::resource('pengumuman', PengumumanController::class)
                     ->parameters(['pengumuman' => 'pengumuman'])
                     ->except(['show']);
+            });
+
+        Route::middleware(PermissionMiddleware::using('manage pengaduan'))
+            ->group(function () {
+                Route::resource('pengaduan-kategori', PengaduanKategoriController::class)
+                    ->parameters(['pengaduan-kategori' => 'pengaduanKategori'])
+                    ->except(['show']);
+
+                Route::get('pengaduan', [PengaduanController::class, 'index'])
+                    ->name('pengaduan.index');
+
+                Route::get('pengaduan/{pengaduan}', [PengaduanController::class, 'show'])
+                    ->name('pengaduan.show');
+
+                Route::patch('pengaduan/{pengaduan}/status', [PengaduanController::class, 'updateStatus'])
+                    ->name('pengaduan.status');
+
+                Route::post('pengaduan/{pengaduan}/feedback', [PengaduanController::class, 'storeFeedback'])
+                    ->name('pengaduan.feedback');
             });
 
         Route::middleware(PermissionMiddleware::using('manage layanan'))
