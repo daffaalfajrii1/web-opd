@@ -42,7 +42,7 @@
                     </div>
 
                     @if ($layanan->fields->isEmpty())
-                        <div class="alert alert-warning">Formulir layanan belum dikonfigurasi. Silakan hubungi kantor kecamatan.</div>
+                        <div class="alert alert-warning">Formulir layanan belum dikonfigurasi. Silakan hubungi kantor.</div>
                     @else
                         <div class="bg-light p-4 rounded-1 kecamatan-layanan-form">
                             <h4 class="mb-4">Formulir Pengajuan</h4>
