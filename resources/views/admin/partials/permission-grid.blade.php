@@ -11,6 +11,7 @@
         'manage galeri' => 'feather-image',
         'manage profil' => 'feather-file',
         'manage pegawai' => 'feather-users',
+        'manage dokter' => 'feather-activity',
         'manage pengumuman' => 'feather-bell',
         'manage layanan' => 'feather-layers',
         'manage pengaturan' => 'feather-settings',

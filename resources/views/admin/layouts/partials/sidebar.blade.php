@@ -82,11 +82,29 @@
                     </li>
                 @endcan
 
+                @can('manage nav menu')
+                    <li class="nxl-item {{ request()->routeIs('admin.nav-menu.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.nav-menu.index') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-menu"></i></span>
+                            <span class="nxl-mtext">Menu Navbar</span>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('manage pegawai')
                     <li class="nxl-item {{ request()->routeIs('admin.pegawai.*', 'admin.jabatan.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.pegawai.index') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-user-check"></i></span>
                             <span class="nxl-mtext">Pegawai</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('manage dokter')
+                    <li class="nxl-item {{ request()->routeIs('admin.dokter.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.dokter.index') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-activity"></i></span>
+                            <span class="nxl-mtext">Dokter</span>
                         </a>
                     </li>
                 @endcan

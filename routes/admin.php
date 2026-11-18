@@ -4,8 +4,10 @@ use App\Http\Controllers\Admin\AgendaController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\BeritaCategoryController;
 use App\Http\Controllers\Admin\BeritaController;
+use App\Http\Controllers\Admin\DokterController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JabatanController;
+use App\Http\Controllers\Admin\NavMenuController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\LayananController;
@@ -29,6 +31,20 @@ Route::middleware(['auth', 'verified', PermissionMiddleware::using('view dashboa
                 Route::resource('pegawai', PegawaiController::class)->except(['show']);
             });
 
+        Route::middleware(PermissionMiddleware::using('manage dokter'))
+            ->group(function () {
+                Route::post('dokter/{dokter}/jadwal', [DokterController::class, 'storeJadwal'])
+                    ->name('dokter.jadwal.store');
+
+                Route::put('dokter/{dokter}/jadwal/{jadwal}', [DokterController::class, 'updateJadwal'])
+                    ->name('dokter.jadwal.update');
+
+                Route::delete('dokter/{dokter}/jadwal/{jadwal}', [DokterController::class, 'destroyJadwal'])
+                    ->name('dokter.jadwal.destroy');
+
+                Route::resource('dokter', DokterController::class)->except(['show']);
+            });
+
         Route::middleware(PermissionMiddleware::using('manage profil'))
             ->group(function () {
                 Route::post('halaman/editor-upload', [PageController::class, 'uploadEditorImage'])
@@ -37,6 +53,19 @@ Route::middleware(['auth', 'verified', PermissionMiddleware::using('view dashboa
 
                 Route::resource('halaman', PageController::class)
                     ->parameters(['halaman' => 'halaman'])
+                    ->except(['show']);
+            });
+
+        Route::middleware(PermissionMiddleware::using('manage nav menu'))
+            ->group(function () {
+                Route::post('nav-menu/reorder', [NavMenuController::class, 'reorder'])
+                    ->name('nav-menu.reorder');
+
+                Route::post('nav-menu/{navMenu}/pages/reorder', [NavMenuController::class, 'reorderPages'])
+                    ->name('nav-menu.pages.reorder');
+
+                Route::resource('nav-menu', NavMenuController::class)
+                    ->parameters(['nav-menu' => 'navMenu'])
                     ->except(['show']);
             });
 

@@ -1,4 +1,4 @@
-@extends('public.layouts.optilux')
+@extends('public.layouts.clinicom')
 
 @section('title', $berita->title)
 @section('meta_description', $berita->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($berita->content), 160))
@@ -20,7 +20,7 @@
 @endpush
 
 @section('content')
-    @include('public.partials.optilux.subheader', [
+    @include('public.partials.clinicom.subheader', [
         'title' => $berita->title,
         'thumbnailUrl' => $berita->thumbnailUrl(),
         'breadcrumbs' => [

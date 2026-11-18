@@ -1,4 +1,4 @@
-@extends('public.layouts.optilux')
+@extends('public.layouts.clinicom')
 
 @section('title', $pengumuman->title)
 @section('meta_description', $pengumuman->excerpt ?: \Illuminate\Support\Str::limit(strip_tags((string) $pengumuman->content), 160))
@@ -7,7 +7,7 @@
 @section('meta_image', $websiteSettings->defaultShareImageUrl())
 
 @section('content')
-    @include('public.partials.optilux.subheader', [
+    @include('public.partials.clinicom.subheader', [
         'title' => $pengumuman->title,
         'breadcrumbs' => [
             ['label' => 'Pengumuman', 'url' => route('public.pengumuman.index')],

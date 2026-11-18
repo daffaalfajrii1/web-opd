@@ -15,14 +15,18 @@ class Page extends Model
 
     public const GROUP_PROFIL = 'profil';
 
+    public const GROUP_NAV = 'nav';
+
     public const MENU_GROUPS = [
         self::GROUP_PROFIL => 'Profil',
+        self::GROUP_NAV => 'Menu dinamis',
     ];
 
     protected $fillable = [
         'title',
         'slug',
         'menu_group',
+        'nav_menu_id',
         'excerpt',
         'content',
         'is_published',
@@ -42,6 +46,11 @@ class Page extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function navMenu(): BelongsTo
+    {
+        return $this->belongsTo(NavMenu::class);
     }
 
     public function scopePublished(Builder $query): Builder
@@ -82,5 +91,6 @@ class Page extends Model
     public static function clearMenuCache(): void
     {
         Cache::forget('public_profil_pages');
+        Cache::forget('public_nav_menus');
     }
 }

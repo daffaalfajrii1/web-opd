@@ -1,4 +1,4 @@
-@extends('public.layouts.optilux')
+@extends('public.layouts.clinicom')
 
 @section('title', $agenda->title)
 @section('meta_description', $agenda->excerpt ?: \Illuminate\Support\Str::limit(strip_tags((string) $agenda->content), 160))
@@ -7,7 +7,7 @@
 @section('meta_image', $agenda->thumbnailUrl() ?: $websiteSettings->defaultShareImageUrl())
 
 @section('content')
-    @include('public.partials.optilux.subheader', [
+    @include('public.partials.clinicom.subheader', [
         'title' => $agenda->title,
         'breadcrumbs' => [
             ['label' => 'Agenda', 'url' => route('public.agenda.index')],

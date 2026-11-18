@@ -303,6 +303,18 @@ class WebsiteSetting extends Model
         return 'https://wa.me/'.$number;
     }
 
+    public function whatsappAduanUrl(?string $message = null): ?string
+    {
+        $base = $this->whatsappUrl();
+        if (! $base) {
+            return null;
+        }
+
+        $text = $message ?: 'Halo, saya ingin menyampaikan aduan terkait layanan '.$this->siteName().'.';
+
+        return $base.'?text='.rawurlencode($text);
+    }
+
     private function hexToRgb(string $hex): string
     {
         $hex = ltrim($hex, '#');

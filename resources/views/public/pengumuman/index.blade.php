@@ -1,9 +1,9 @@
-@extends('public.layouts.optilux')
+@extends('public.layouts.clinicom')
 
 @section('title', 'Pengumuman')
 
 @section('content')
-    @include('public.partials.optilux.subheader', [
+    @include('public.partials.clinicom.subheader', [
         'title' => 'Pengumuman',
         'breadcrumbs' => [['label' => 'Pengumuman']],
     ])

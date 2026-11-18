@@ -1,0 +1,70 @@
+/* RSUD Clinicom overrides */
+.rsud-wa-fab {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.15rem;
+    border-radius: 999px;
+    background: #25d366;
+    color: #fff !important;
+    font-weight: 600;
+    text-decoration: none !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+.rsud-wa-fab:hover {
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+.rsud-wa-fab i {
+    font-size: 1.35rem;
+}
+
+@media (max-width: 575.98px) {
+    .rsud-wa-fab span { display: none; }
+    .rsud-wa-fab {
+        width: 3.25rem;
+        height: 3.25rem;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+    }
+}
+
+.rsud-doctor-search {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    margin-top: -40px;
+    position: relative;
+    z-index: 2;
+}
+
+.rsud-doctor-card a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.rsud-doctor-card .thumb img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.top-bar-area .logo img,
+.navbar-brand .logo {
+    max-height: 52px;
+    width: auto;
+}
+
+/* Content pages compatibility */
+.kecamatan-content img {
+    max-width: 100%;
+    height: auto;
+}

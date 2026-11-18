@@ -1,4 +1,4 @@
-@extends('public.layouts.optilux')
+@extends('public.layouts.clinicom')
 
 @section('title', $page->title)
 @section('meta_description', $page->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($page->content), 160))
@@ -7,7 +7,7 @@
 @section('meta_image', $websiteSettings->defaultShareImageUrl())
 
 @section('content')
-    @include('public.partials.optilux.subheader', [
+    @include('public.partials.clinicom.subheader', [
         'title' => $page->title,
         'breadcrumbs' => [
             ['label' => 'Profil', 'url' => $profilPages->first() ? route('public.profil.show', $profilPages->first()->slug) : route('home')],

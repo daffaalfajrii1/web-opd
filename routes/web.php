@@ -3,10 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\AgendaController;
 use App\Http\Controllers\Public\BeritaController;
+use App\Http\Controllers\Public\DokterController as PublicDokterController;
 use App\Http\Controllers\Public\GaleriController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\KontakController;
 use App\Http\Controllers\Public\LayananController;
+use App\Http\Controllers\Public\MenuPageController;
 use App\Http\Controllers\Public\PageController as PublicPageController;
 use App\Http\Controllers\Public\PegawaiController as PublicPegawaiController;
 use App\Http\Controllers\Public\PengumumanController;
@@ -14,7 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/profil/{slug}', [PublicPageController::class, 'show'])->name('public.profil.show');
+Route::get('/menu/{menu}/{slug}', [MenuPageController::class, 'show'])->name('public.menu-page.show');
 Route::get('/pegawai', [PublicPegawaiController::class, 'index'])->name('public.pegawai.index');
+
+Route::get('/dokter', [PublicDokterController::class, 'index'])->name('public.dokter.index');
+Route::get('/dokter/{slug}', [PublicDokterController::class, 'show'])->name('public.dokter.show');
+Route::get('/jadwal-dokter', [PublicDokterController::class, 'jadwal'])->name('public.dokter.jadwal');
 
 Route::get('/berita', [BeritaController::class, 'index'])->name('public.berita.index');
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('public.berita.show');

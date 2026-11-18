@@ -1,9 +1,9 @@
-@extends('public.layouts.optilux')
+@extends('public.layouts.clinicom')
 
 @section('title', 'Cek Status Pengajuan')
 
 @section('content')
-    @include('public.partials.optilux.subheader', [
+    @include('public.partials.clinicom.subheader', [
         'title' => 'Cek Status Pengajuan',
         'breadcrumbs' => [
             ['label' => 'Layanan', 'url' => route('public.layanan.index')],

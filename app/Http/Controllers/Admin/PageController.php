@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Concerns\HandlesEditorUpload;
 use App\Http\Controllers\Controller;
+use App\Models\NavMenu;
 use App\Models\Page;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -27,9 +29,12 @@ class PageController extends Controller
         return view('admin.pages.index', compact('pages'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('admin.pages.create');
+        return view('admin.pages.create', [
+            'navMenus' => NavMenu::query()->ordered()->get(),
+            'prefillNavMenuId' => $request->integer('nav_menu_id') ?: null,
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -37,11 +42,15 @@ class PageController extends Controller
         $validated = $this->validatePage($request);
 
         $isPublished = $request->boolean('is_published', true);
+        $menuGroup = $validated['menu_group'];
+        $navMenuId = $menuGroup === Page::GROUP_NAV ? ($validated['nav_menu_id'] ?? null) : null;
 
         Page::create([
             ...$validated,
+            'menu_group' => $menuGroup,
+            'nav_menu_id' => $navMenuId,
             'sort_order' => $validated['sort_order'] ?? 0,
-            'slug' => Page::uniqueSlug($validated['title'], $validated['menu_group']),
+            'slug' => Page::uniqueSlug($validated['title'], $menuGroup),
             'user_id' => Auth::id(),
             'is_published' => $isPublished,
             'published_at' => $isPublished ? now() : null,
@@ -56,7 +65,10 @@ class PageController extends Controller
 
     public function edit(Page $halaman): View
     {
-        return view('admin.pages.edit', ['page' => $halaman]);
+        return view('admin.pages.edit', [
+            'page' => $halaman,
+            'navMenus' => NavMenu::query()->ordered()->get(),
+        ]);
     }
 
     public function update(Request $request, Page $halaman): RedirectResponse
@@ -65,15 +77,19 @@ class PageController extends Controller
 
         $isPublished = $request->boolean('is_published');
         $slug = $halaman->slug;
+        $menuGroup = $validated['menu_group'];
+        $navMenuId = $menuGroup === Page::GROUP_NAV ? ($validated['nav_menu_id'] ?? null) : null;
 
         if ($halaman->title !== $validated['title']) {
-            $slug = Page::uniqueSlug($validated['title'], $validated['menu_group'], $halaman->id);
-        } elseif ($halaman->menu_group !== $validated['menu_group']) {
-            $slug = Page::uniqueSlug($validated['title'], $validated['menu_group'], $halaman->id);
+            $slug = Page::uniqueSlug($validated['title'], $menuGroup, $halaman->id);
+        } elseif ($halaman->menu_group !== $menuGroup) {
+            $slug = Page::uniqueSlug($validated['title'], $menuGroup, $halaman->id);
         }
 
         $halaman->update([
             ...$validated,
+            'menu_group' => $menuGroup,
+            'nav_menu_id' => $navMenuId,
             'slug' => $slug,
             'is_published' => $isPublished,
             'published_at' => $isPublished
@@ -106,6 +122,12 @@ class PageController extends Controller
         return $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'menu_group' => ['required', 'string', 'in:'.implode(',', array_keys(Page::MENU_GROUPS))],
+            'nav_menu_id' => [
+                Rule::requiredIf($request->input('menu_group') === Page::GROUP_NAV),
+                'nullable',
+                'integer',
+                'exists:nav_menus,id',
+            ],
             'excerpt' => ['nullable', 'string', 'max:500'],
             'content' => ['nullable', 'string'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
@@ -113,6 +135,7 @@ class PageController extends Controller
         ], [], [
             'title' => 'judul',
             'menu_group' => 'grup menu',
+            'nav_menu_id' => 'menu navbar',
             'excerpt' => 'ringkasan',
             'content' => 'konten',
             'sort_order' => 'urutan',

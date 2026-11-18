@@ -1,4 +1,4 @@
-@extends('public.layouts.optilux')
+@extends('public.layouts.clinicom')
 
 @section('title', $galeri->title)
 @section('meta_description', $galeri->description ?: 'Galeri '.$galeri->title.' — '.$websiteSettings->siteName())
@@ -7,7 +7,7 @@
 @section('meta_image', $galeri->thumbnailUrl() ?: $websiteSettings->defaultShareImageUrl())
 
 @section('content')
-    @include('public.partials.optilux.subheader', [
+    @include('public.partials.clinicom.subheader', [
         'title' => $galeri->title,
         'breadcrumbs' => [
             ['label' => 'Galeri', 'url' => route('public.galeri.index')],

@@ -1,9 +1,9 @@
-@extends('public.layouts.optilux')
+@extends('public.layouts.clinicom')
 
 @section('title', $layanan->title)
 
 @section('content')
-    @include('public.partials.optilux.subheader', [
+    @include('public.partials.clinicom.subheader', [
         'title' => $layanan->title,
         'breadcrumbs' => [
             ['label' => 'Layanan', 'url' => route('public.layanan.index')],

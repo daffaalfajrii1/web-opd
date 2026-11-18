@@ -22,6 +22,8 @@ class RoleAndPermissionSeeder extends Seeder
             'manage galeri',
             'manage profil',
             'manage pegawai',
+            'manage dokter',
+            'manage nav menu',
             'manage pengumuman',
             'manage layanan',
             'manage pengaturan',
@@ -52,6 +54,8 @@ class RoleAndPermissionSeeder extends Seeder
             'manage galeri',
             'manage profil',
             'manage pegawai',
+            'manage dokter',
+            'manage nav menu',
             'manage pengumuman',
             'manage layanan',
         ]);

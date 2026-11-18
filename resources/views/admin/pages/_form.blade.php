@@ -11,10 +11,21 @@
     </div>
     <div class="col-md-4">
         <label class="fw-semibold">Grup Menu *</label>
-        <select name="menu_group" class="form-select" required>
+        <select name="menu_group" id="page-menu-group" class="form-select" required>
             @foreach (App\Models\Page::MENU_GROUPS as $value => $label)
-                <option value="{{ $value }}" @selected(old('menu_group', $item?->menu_group ?? App\Models\Page::GROUP_PROFIL) === $value)>
+                <option value="{{ $value }}" @selected(old('menu_group', $item?->menu_group ?? (($prefillNavMenuId ?? null) ? App\Models\Page::GROUP_NAV : App\Models\Page::GROUP_PROFIL)) === $value)>
                     {{ $label }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-4" id="page-nav-menu-wrap">
+        <label class="fw-semibold">Menu Navbar Dinamis *</label>
+        <select name="nav_menu_id" class="form-select">
+            <option value="">— Pilih menu —</option>
+            @foreach (($navMenus ?? []) as $navMenu)
+                <option value="{{ $navMenu->id }}" @selected(old('nav_menu_id', $item?->nav_menu_id ?? ($prefillNavMenuId ?? null)) == $navMenu->id)>
+                    {{ $navMenu->title }}
                 </option>
             @endforeach
         </select>
@@ -44,3 +55,18 @@
         </div>
     </div>
 </div>
+
+@once
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const group = document.getElementById('page-menu-group');
+    const wrap = document.getElementById('page-nav-menu-wrap');
+    if (!group || !wrap) return;
+    const sync = () => { wrap.style.display = group.value === 'nav' ? '' : 'none'; };
+    group.addEventListener('change', sync);
+    sync();
+});
+</script>
+@endpush
+@endonce

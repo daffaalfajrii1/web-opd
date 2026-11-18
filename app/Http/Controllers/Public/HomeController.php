@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Agenda;
 use App\Models\Berita;
+use App\Models\Dokter;
 use App\Models\Galeri;
 use App\Models\Jabatan;
 use App\Models\Layanan;
 use App\Models\Pegawai;
 use App\Models\Pengumuman;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -57,6 +59,15 @@ class HomeController extends Controller
         $totalPegawai = Pegawai::query()->published()->count();
         $totalJabatan = Jabatan::query()->active()->count();
 
+        $featuredDokters = collect();
+        if (Schema::hasTable('dokters')) {
+            $featuredDokters = Dokter::query()
+                ->active()
+                ->ordered()
+                ->limit(6)
+                ->get();
+        }
+
         return view('public.home', compact(
             'latestBeritas',
             'upcomingAgendas',
@@ -65,6 +76,7 @@ class HomeController extends Controller
             'layanans',
             'totalPegawai',
             'totalJabatan',
+            'featuredDokters',
         ));
     }
 }
