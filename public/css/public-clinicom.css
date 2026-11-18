@@ -4,15 +4,99 @@
     display: none !important;
 }
 
-/* ---------- Header / nav ---------- */
+/* ---------- Marquee pengumuman ---------- */
+.rsud-marquee {
+    background: var(--theme-dark, #003d47);
+    color: #fff;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rsud-marquee__inner {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+}
+
+.rsud-marquee__label {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.rsud-marquee__viewport {
+    flex: 1 1 auto;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.rsud-marquee__track {
+    display: flex;
+    gap: 2.5rem;
+    width: max-content;
+    white-space: nowrap;
+    animation: rsud-marquee-scroll 38s linear infinite;
+}
+
+.rsud-marquee__item {
+    font-size: 0.9rem;
+    opacity: 0.95;
+}
+
+.rsud-marquee__item::before {
+    content: "•";
+    margin-right: 0.75rem;
+    opacity: 0.55;
+}
+
+@keyframes rsud-marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 575.98px) {
+    .rsud-marquee__label span,
+    .rsud-marquee__label {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.55rem;
+    }
+}
+
+/* ---------- Header / nav: tidak menimpa carousel ---------- */
 .rsud-header {
     position: relative;
-    z-index: 20;
-    margin-bottom: 1.25rem;
+    z-index: 30;
+    margin: 0;
+    padding: 0.85rem 0 1.25rem;
+    background: transparent;
 }
 
 .rsud-header .box-nav {
-    margin-top: -1.5rem;
+    margin-top: 0 !important;
+}
+
+.rsud-header nav.navbar.bootsnav.rsud-navbar,
+.rsud-header nav.navbar.bootsnav.nav-box,
+.rsud-header nav.navbar.bootsnav.navbar-fixed.nav-box.no-background,
+.rsud-header nav.navbar.bootsnav.top-less.navbar-fixed.nav-box.no-background {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    background: #fff !important;
+    box-shadow: 0 8px 28px rgba(11, 61, 74, 0.1) !important;
+    border-radius: 12px;
 }
 
 .rsud-header .nav.navbar-nav > li > a {
@@ -22,24 +106,26 @@
 
 @media (max-width: 991.98px) {
     .rsud-header {
-        margin-bottom: 0.5rem;
+        padding: 0.5rem 0 0.85rem;
     }
 
-    .rsud-header .box-nav {
-        margin-top: 0;
+    .rsud-header nav.navbar.bootsnav.rsud-navbar {
+        border-radius: 0;
+        box-shadow: 0 4px 16px rgba(11, 61, 74, 0.08) !important;
     }
 }
 
-/* ---------- Banner / carousel dari pengaturan ---------- */
+/* ---------- Banner / carousel di BAWAH navbar ---------- */
 .rsud-banner {
     position: relative;
     z-index: 1;
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
+    clear: both;
 }
 
 .rsud-banner .carousel-item,
 .rsud-banner .slider-thumb {
-    min-height: 420px;
+    min-height: clamp(280px, 42vw, 520px);
 }
 
 .rsud-banner .slider-thumb {
@@ -278,18 +364,23 @@ main .breadcrumb-area + *,
 
 /* ---------- Section spacing ---------- */
 .rsud-section {
-    padding: 4.5rem 0;
+    padding: 5rem 0;
 }
 
 .rsud-section--search {
-    padding: 0 0 1.5rem;
-    margin-top: -2.5rem;
+    padding: 0 0 0.5rem;
+    margin-top: -2rem;
     position: relative;
     z-index: 3;
 }
 
+.rsud-section--portal {
+    padding-top: 3.5rem;
+    padding-bottom: 5rem;
+}
+
 .rsud-section__cta {
-    margin-top: 2rem;
+    margin-top: 2.25rem;
 }
 
 .rsud-gap > [class*="col-"] {
@@ -402,6 +493,80 @@ main .breadcrumb-area + *,
 .rsud-card__link {
     font-weight: 700;
     color: #0b3d4a !important;
+}
+
+/* ---------- Berita cards + thumbnail seragam 16:9 ---------- */
+.rsud-berita-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eef2f4;
+    box-shadow: 0 10px 28px rgba(11, 61, 74, 0.07);
+}
+
+.rsud-berita-card__thumb {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #d7e4e8;
+    overflow: hidden;
+}
+
+.rsud-berita-card__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.rsud-berita-card__fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(
+            135deg,
+            var(--theme-dark, #003d47) 0%,
+            var(--theme-primary, #0b3d4a) 45%,
+            var(--theme-light, #1a7a8c) 100%
+        );
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 2rem;
+}
+
+.rsud-berita-card__body {
+    padding: 1.25rem 1.35rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.rsud-berita-card__meta {
+    display: block;
+    color: #7a8a92;
+    margin-bottom: 0.45rem;
+}
+
+.rsud-berita-card__title {
+    margin: 0 0 0.65rem;
+    font-size: 1.15rem;
+    line-height: 1.35;
+}
+
+.rsud-berita-card__title a {
+    color: #12363f;
+}
+
+.rsud-berita-card__excerpt {
+    color: #5b6b73;
+    margin-bottom: 1rem;
+    flex: 1 1 auto;
 }
 
 /* ---------- Dokter cards ---------- */
@@ -525,12 +690,16 @@ main .breadcrumb-area + *,
 
 @media (max-width: 575.98px) {
     .rsud-section {
-        padding: 3rem 0;
+        padding: 3.25rem 0;
+    }
+
+    .rsud-section--portal {
+        padding-top: 2.5rem;
     }
 
     .rsud-section--search {
-        margin-top: -1.25rem;
-        padding-bottom: 1rem;
+        margin-top: -1rem;
+        padding-bottom: 0.5rem;
     }
 
     .rsud-wa-fab span {

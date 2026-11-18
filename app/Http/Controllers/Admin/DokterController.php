@@ -56,7 +56,7 @@ class DokterController extends Controller
             'facebook_url' => $validated['facebook_url'] ?? null,
             'poli' => $validated['poli'] ?? null,
             'bio' => $validated['bio'] ?? null,
-            'sort_order' => $validated['sort_order'] ?? 0,
+            'sort_order' => ((int) Dokter::query()->max('sort_order')) + 1,
             'photo_path' => $this->storePhoto($request),
             'is_active' => $request->boolean('is_active', true),
         ]);
@@ -102,7 +102,6 @@ class DokterController extends Controller
             'facebook_url' => $validated['facebook_url'] ?? null,
             'poli' => $validated['poli'] ?? null,
             'bio' => $validated['bio'] ?? null,
-            'sort_order' => $validated['sort_order'] ?? 0,
             'is_active' => $request->boolean('is_active'),
         ];
 
@@ -194,7 +193,6 @@ class DokterController extends Controller
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'poli' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
             'photo' => ['nullable', 'image', 'max:2048'],
             'remove_photo' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],

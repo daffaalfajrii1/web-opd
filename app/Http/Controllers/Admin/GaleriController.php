@@ -46,6 +46,7 @@ class GaleriController extends Controller
         $galeri = Galeri::create([
             ...$validated,
             'slug' => Galeri::uniqueSlug($validated['title']),
+            'sort_order' => ((int) Galeri::query()->max('sort_order')) + 1,
             'user_id' => Auth::id(),
             'status' => $status,
             'published_at' => $status === Galeri::STATUS_PUBLISHED ? now() : null,
@@ -207,7 +208,6 @@ class GaleriController extends Controller
             'event_date' => ['nullable', 'date'],
             'status' => ['required', Rule::in([Galeri::STATUS_DRAFT, Galeri::STATUS_PUBLISHED])],
             'is_featured' => ['nullable', 'boolean'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
             'thumbnail' => ['nullable', 'image', 'max:2048'],
         ], [], [
             'title' => 'judul album',
@@ -215,12 +215,10 @@ class GaleriController extends Controller
             'event_date' => 'tanggal kegiatan',
             'status' => 'status',
             'is_featured' => 'sorotan',
-            'sort_order' => 'urutan',
             'thumbnail' => 'gambar sampul',
         ]);
 
         $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         return $validated;
     }

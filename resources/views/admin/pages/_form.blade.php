@@ -6,10 +6,6 @@
         <input type="text" name="title" class="form-control" value="{{ old('title', $item?->title) }}" required>
     </div>
     <div class="col-md-4">
-        <label class="fw-semibold">Urutan</label>
-        <input type="number" name="sort_order" class="form-control" min="0" value="{{ old('sort_order', $item?->sort_order ?? 0) }}">
-    </div>
-    <div class="col-md-4">
         <label class="fw-semibold">Grup Menu *</label>
         <select name="menu_group" id="page-menu-group" class="form-select" required>
             @foreach (App\Models\Page::MENU_GROUPS as $value => $label)

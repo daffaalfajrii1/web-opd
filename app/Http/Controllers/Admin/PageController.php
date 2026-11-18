@@ -45,11 +45,13 @@ class PageController extends Controller
         $menuGroup = $validated['menu_group'];
         $navMenuId = $menuGroup === Page::GROUP_NAV ? ($validated['nav_menu_id'] ?? null) : null;
 
+        unset($validated['sort_order']);
+
         Page::create([
             ...$validated,
             'menu_group' => $menuGroup,
             'nav_menu_id' => $navMenuId,
-            'sort_order' => $validated['sort_order'] ?? 0,
+            'sort_order' => ((int) Page::query()->where('nav_menu_id', $navMenuId)->max('sort_order')) + 1,
             'slug' => Page::uniqueSlug($validated['title'], $menuGroup),
             'user_id' => Auth::id(),
             'is_published' => $isPublished,
@@ -130,7 +132,6 @@ class PageController extends Controller
             ],
             'excerpt' => ['nullable', 'string', 'max:500'],
             'content' => ['nullable', 'string'],
-            'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_published' => ['nullable', 'boolean'],
         ], [], [
             'title' => 'judul',
@@ -138,7 +139,6 @@ class PageController extends Controller
             'nav_menu_id' => 'menu navbar',
             'excerpt' => 'ringkasan',
             'content' => 'konten',
-            'sort_order' => 'urutan',
         ]);
     }
 }

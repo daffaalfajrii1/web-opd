@@ -30,7 +30,6 @@ class JabatanController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ], [], ['name' => 'nama jabatan']);
 
@@ -38,7 +37,7 @@ class JabatanController extends Controller
             'name' => $validated['name'],
             'slug' => Jabatan::uniqueSlug($validated['name']),
             'description' => $validated['description'] ?? null,
-            'sort_order' => $validated['sort_order'] ?? 0,
+            'sort_order' => ((int) Jabatan::query()->max('sort_order')) + 1,
             'is_active' => $request->boolean('is_active', true),
         ]);
 
@@ -57,7 +56,6 @@ class JabatanController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ], [], ['name' => 'nama jabatan']);
 
@@ -70,7 +68,6 @@ class JabatanController extends Controller
             'name' => $validated['name'],
             'slug' => $slug,
             'description' => $validated['description'] ?? null,
-            'sort_order' => $validated['sort_order'] ?? 0,
             'is_active' => $request->boolean('is_active'),
         ]);
 

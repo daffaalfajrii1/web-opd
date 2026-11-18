@@ -34,10 +34,8 @@
             <option value="{{ App\Models\Galeri::STATUS_PUBLISHED }}" @selected(old('status', $item?->status) === App\Models\Galeri::STATUS_PUBLISHED)>Terbit</option>
         </select>
     </div>
-    <div class="col-md-3">
-        <label class="fw-semibold">Urutan</label>
-        <input type="number" name="sort_order" class="form-control" min="0" value="{{ old('sort_order', $item?->sort_order ?? 0) }}">
-        <div class="form-check mt-3">
+    <div class="col-md-3 d-flex align-items-end">
+        <div class="form-check mb-2">
             <input type="checkbox" name="is_featured" value="1" class="form-check-input" id="galeri-featured" @checked(old('is_featured', $item?->is_featured))>
             <label class="form-check-label" for="galeri-featured">Sorotan</label>
         </div>

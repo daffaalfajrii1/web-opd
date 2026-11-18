@@ -30,14 +30,13 @@ class NavMenuController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_active' => ['nullable', 'boolean'],
         ], [], ['title' => 'judul menu']);
 
         NavMenu::create([
             'title' => $validated['title'],
             'slug' => NavMenu::uniqueSlug($validated['title']),
-            'sort_order' => $validated['sort_order'] ?? 0,
+            'sort_order' => ((int) NavMenu::query()->max('sort_order')) + 1,
             'is_active' => $request->boolean('is_active', true),
         ]);
 
@@ -59,7 +58,6 @@ class NavMenuController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_active' => ['nullable', 'boolean'],
         ], [], ['title' => 'judul menu']);
 
@@ -71,7 +69,6 @@ class NavMenuController extends Controller
         $navMenu->update([
             'title' => $validated['title'],
             'slug' => $slug,
-            'sort_order' => $validated['sort_order'] ?? 0,
             'is_active' => $request->boolean('is_active'),
         ]);
 

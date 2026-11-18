@@ -80,16 +80,16 @@
         </div>
         @error('photo')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
     </div>
-    <div class="col-md-6">
-        <label class="fw-semibold">Urutan Tampil</label>
-        <input type="number" name="sort_order" class="form-control" min="0" value="{{ old('sort_order', $item?->sort_order ?? 0) }}">
-        <div class="form-check form-switch mt-4">
-            <input type="checkbox" name="is_active" value="1" class="form-check-input" id="dokter-active" @checked(old('is_active', $item?->is_active ?? true))>
-            <label class="form-check-label" for="dokter-active">Tampilkan di website publik</label>
+    <div class="col-md-6 d-flex align-items-end">
+        <div class="w-100">
+            <div class="form-check form-switch">
+                <input type="checkbox" name="is_active" value="1" class="form-check-input" id="dokter-active" @checked(old('is_active', $item?->is_active ?? true))>
+                <label class="form-check-label" for="dokter-active">Tampilkan di website publik</label>
+            </div>
+            @if ($item)
+                <div class="text-muted fs-12 mt-3">Slug: <code>{{ $item->slug }}</code></div>
+            @endif
         </div>
-        @if ($item)
-            <div class="text-muted fs-12 mt-3">Slug: <code>{{ $item->slug }}</code></div>
-        @endif
     </div>
     <div class="col-12">
         <label class="fw-semibold">Bio / Profil Singkat</label>

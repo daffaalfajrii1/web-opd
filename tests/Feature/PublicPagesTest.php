@@ -20,13 +20,14 @@ class PublicPagesTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_homepage_uses_optilux_layout(): void
+    public function test_homepage_uses_clinicom_layout(): void
     {
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertSee('optilux/css/style.css', false);
+        $response->assertSee('css/public-clinicom.css', false);
         $response->assertSee('Layanan Online', false);
+        $response->assertSee('Portal Resmi', false);
     }
 
     public function test_public_module_routes_are_accessible(): void

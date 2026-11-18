@@ -21,7 +21,6 @@
                             <tr>
                                 <th style="width:50px">No</th>
                                 <th>Nama Jabatan</th>
-                                <th>Urutan</th>
                                 <th>Jumlah Pegawai</th>
                                 <th>Status</th>
                                 <th class="text-end" style="min-width:160px">Aksi</th>
@@ -32,7 +31,6 @@
                                 <tr>
                                     <td>{{ $jabatans->firstItem() + $loop->index }}</td>
                                     <td class="fw-semibold">{{ $jabatan->name }}</td>
-                                    <td>{{ $jabatan->sort_order }}</td>
                                     <td>{{ $jabatan->pegawais_count }}</td>
                                     <td>
                                         <span class="badge {{ $jabatan->is_active ? 'bg-soft-success text-success' : 'bg-soft-secondary text-secondary' }}">

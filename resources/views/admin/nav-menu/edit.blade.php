@@ -22,8 +22,11 @@
         </div></div>
 
         <div class="card">
-            <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Halaman di dropdown</h5>
+            <div class="card-header bg-transparent d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <h5 class="mb-0">Sub-menu (halaman dinamis)</h5>
+                    <small class="text-muted">Tarik baris untuk mengubah urutan dropdown. Menu utama tetap berjajar di navbar.</small>
+                </div>
                 <a href="{{ route('admin.halaman.create', ['nav_menu_id' => $menu->id]) }}" class="btn btn-sm btn-primary">Tambah Halaman</a>
             </div>
             <div class="card-body">
@@ -40,11 +43,11 @@
                                 <a href="{{ route('admin.halaman.edit', $page) }}" class="btn btn-sm btn-light">Edit</a>
                             </li>
                         @empty
-                            <li class="list-group-item text-muted">Belum ada halaman. Tambah dari menu Halaman Profil dengan grup "Menu dinamis".</li>
+                            <li class="list-group-item text-muted">Belum ada sub-menu. Tambah halaman dinamis ke menu ini.</li>
                         @endforelse
                     </ul>
                     @if ($menu->pages->isNotEmpty())
-                        <button type="submit" class="btn btn-light-brand">Simpan Urutan Dropdown</button>
+                        <button type="submit" class="btn btn-light-brand">Simpan Urutan Sub-menu</button>
                     @endif
                 </form>
             </div>

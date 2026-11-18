@@ -40,8 +40,11 @@ class PegawaiController extends Controller
     {
         $validated = $this->validatePegawai($request);
 
+        unset($validated['sort_order']);
+
         Pegawai::create([
             ...$validated,
+            'sort_order' => ((int) Pegawai::query()->max('sort_order')) + 1,
             'photo_path' => $this->storePhoto($request),
             'is_published' => $request->boolean('is_published', true),
         ]);
@@ -108,7 +111,6 @@ class PegawaiController extends Controller
             'email' => ['nullable', 'email', 'max:120'],
             'phone' => ['nullable', 'string', 'max:30'],
             'bio' => ['nullable', 'string', 'max:1000'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
             'photo' => ['nullable', 'image', 'max:2048'],
             'remove_photo' => ['nullable', 'boolean'],
             'is_published' => ['nullable', 'boolean'],

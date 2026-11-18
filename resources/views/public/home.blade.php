@@ -20,7 +20,7 @@
         </div>
     </section>
 
-    <section class="rsud-section about-area">
+    <section class="rsud-section rsud-section--portal about-area">
         <div class="container">
             <div class="row align-items-center rsud-gap">
                 <div class="col-lg-7">
@@ -54,147 +54,153 @@
         </div>
     </section>
 
-    @if ($latestPengumumans->isNotEmpty())
-        <section class="rsud-section bg-gray">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 col-md-10">
-                        <div class="site-heading text-center">
-                            <h4>Informasi Penting</h4>
-                            <h2>Pengumuman</h2>
-                        </div>
+    <section class="rsud-section bg-gray">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="site-heading text-center">
+                        <h4>Update Terkini</h4>
+                        <h2>Berita Terbaru</h2>
                     </div>
-                </div>
-                <div class="row rsud-gap justify-content-center">
-                    @foreach ($latestPengumumans as $pengumuman)
-                        <div class="col-lg-4 col-md-6">
-                            <article class="rsud-card">
-                                @if ($pengumuman->is_featured)
-                                    <span class="rsud-card__badge">Unggulan</span>
-                                @endif
-                                <small class="rsud-card__meta">{{ optional($pengumuman->published_at)->translatedFormat('d F Y') }}</small>
-                                <h4><a href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">{{ $pengumuman->title }}</a></h4>
-                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($pengumuman->excerpt ?: $pengumuman->content), 110) }}</p>
-                                <a class="rsud-card__link" href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">Baca pengumuman</a>
-                            </article>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="text-center rsud-section__cta">
-                    <a class="btn btn-md btn-gradient" href="{{ route('public.pengumuman.index') }}">Semua Pengumuman</a>
                 </div>
             </div>
-        </section>
-    @endif
-
-    @if ($latestBeritas->isNotEmpty())
-        <section class="rsud-section">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 col-md-10">
-                        <div class="site-heading text-center">
-                            <h4>Update Terkini</h4>
-                            <h2>Berita Terbaru</h2>
-                        </div>
+            <div class="row rsud-gap justify-content-center">
+                @forelse ($latestBeritas as $berita)
+                    <div class="col-lg-4 col-md-6">
+                        @include('public.partials.clinicom.berita-card', ['berita' => $berita])
                     </div>
-                </div>
-                <div class="row rsud-gap justify-content-center">
-                    @foreach ($latestBeritas as $berita)
-                        <div class="col-lg-4 col-md-6">
-                            <article class="rsud-card">
-                                <small class="rsud-card__meta">
-                                    {{ optional($berita->published_at)->translatedFormat('d F Y') }}
-                                    @if ($berita->category)
-                                        · {{ $berita->category->name }}
-                                    @endif
-                                </small>
-                                <h4><a href="{{ route('public.berita.show', $berita->slug) }}">{{ $berita->title }}</a></h4>
-                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($berita->excerpt ?: $berita->content), 120) }}</p>
-                                <a class="rsud-card__link" href="{{ route('public.berita.show', $berita->slug) }}">Baca selengkapnya</a>
-                            </article>
-                        </div>
-                    @endforeach
-                </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-center text-muted mb-0">Belum ada berita terbaru.</p>
+                    </div>
+                @endforelse
+            </div>
+            @if ($latestBeritas->isNotEmpty())
                 <div class="text-center rsud-section__cta">
                     <a class="btn btn-md btn-gradient" href="{{ route('public.berita.index') }}">Semua Berita</a>
                 </div>
-            </div>
-        </section>
-    @endif
+            @endif
+        </div>
+    </section>
 
-    @if ($upcomingAgendas->isNotEmpty())
-        <section class="rsud-section bg-gray">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 col-md-10">
-                        <div class="site-heading text-center">
-                            <h4>Kalender</h4>
-                            <h2>Agenda Mendatang</h2>
-                        </div>
+    <section class="rsud-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="site-heading text-center">
+                        <h4>Publikasi</h4>
+                        <h2>Pengumuman</h2>
                     </div>
                 </div>
-                <div class="row rsud-gap justify-content-center">
-                    @foreach ($upcomingAgendas as $agenda)
-                        <div class="col-lg-4 col-md-6">
-                            <article class="rsud-card">
-                                <small class="rsud-card__meta">{{ $agenda->formattedEventDate() }}</small>
-                                <h4><a href="{{ route('public.agenda.show', $agenda->slug) }}">{{ $agenda->title }}</a></h4>
-                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($agenda->excerpt ?: $agenda->description ?? ''), 100) ?: ($agenda->locationDisplay() ?? 'Agenda kegiatan') }}</p>
-                                <a class="rsud-card__link" href="{{ route('public.agenda.show', $agenda->slug) }}">Detail agenda</a>
-                            </article>
-                        </div>
-                    @endforeach
+            </div>
+            <div class="row rsud-gap justify-content-center">
+                @forelse ($latestPengumumans as $pengumuman)
+                    <div class="col-lg-4 col-md-6">
+                        <article class="rsud-card">
+                            @if ($pengumuman->is_featured)
+                                <span class="rsud-card__badge">Unggulan</span>
+                            @endif
+                            <small class="rsud-card__meta">{{ optional($pengumuman->published_at)->translatedFormat('d F Y') }}</small>
+                            <h4><a href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">{{ $pengumuman->title }}</a></h4>
+                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($pengumuman->excerpt ?: $pengumuman->content), 110) }}</p>
+                            <a class="rsud-card__link" href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">Baca pengumuman</a>
+                        </article>
+                    </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-center text-muted mb-0">Belum ada pengumuman aktif.</p>
+                    </div>
+                @endforelse
+            </div>
+            @if ($latestPengumumans->isNotEmpty())
+                <div class="text-center rsud-section__cta">
+                    <a class="btn btn-md btn-gradient" href="{{ route('public.pengumuman.index') }}">Semua Pengumuman</a>
                 </div>
+            @endif
+        </div>
+    </section>
+
+    <section class="rsud-section bg-gray">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="site-heading text-center">
+                        <h4>Kalender</h4>
+                        <h2>Agenda Mendatang</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row rsud-gap justify-content-center">
+                @forelse ($upcomingAgendas as $agenda)
+                    <div class="col-lg-4 col-md-6">
+                        <article class="rsud-card">
+                            <small class="rsud-card__meta">{{ $agenda->formattedEventDate() }}</small>
+                            <h4><a href="{{ route('public.agenda.show', $agenda->slug) }}">{{ $agenda->title }}</a></h4>
+                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($agenda->excerpt ?: $agenda->description ?? ''), 100) ?: ($agenda->locationDisplay() ?? 'Agenda kegiatan') }}</p>
+                            <a class="rsud-card__link" href="{{ route('public.agenda.show', $agenda->slug) }}">Detail agenda</a>
+                        </article>
+                    </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-center text-muted mb-0">Belum ada agenda mendatang.</p>
+                    </div>
+                @endforelse
+            </div>
+            @if ($upcomingAgendas->isNotEmpty())
                 <div class="text-center rsud-section__cta">
                     <a class="btn btn-md btn-gradient" href="{{ route('public.agenda.index') }}">Semua Agenda</a>
                 </div>
-            </div>
-        </section>
-    @endif
+            @endif
+        </div>
+    </section>
 
-    @if ($featuredDokters->isNotEmpty())
-        <section class="rsud-section doctors-area three-colum bottom-less">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 col-md-10">
-                        <div class="site-heading text-center">
-                            <h4>Tenaga Medis</h4>
-                            <h2>Dokter Kami</h2>
-                            <p>Klik kartu dokter untuk melihat jadwal praktik.</p>
-                        </div>
+    <section class="rsud-section doctors-area three-colum bottom-less">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="site-heading text-center">
+                        <h4>Tenaga Medis</h4>
+                        <h2>Dokter Kami</h2>
+                        <p>Klik kartu dokter untuk melihat jadwal praktik.</p>
                     </div>
                 </div>
-                <div class="doctor-items text-center">
-                    <div class="row rsud-gap justify-content-center">
-                        @foreach ($featuredDokters as $dokter)
-                            <div class="col-lg-4 col-md-6 single-item rsud-doctor-card">
-                                <div class="item">
-                                    <div class="thumb">
-                                        <a href="{{ route('public.dokter.show', $dokter->slug) }}">
-                                            <img src="{{ $dokter->photoUrl() }}" alt="{{ $dokter->name }}">
-                                        </a>
-                                        <div class="button">
-                                            <a href="{{ route('public.dokter.show', $dokter->slug) }}">Lihat Jadwal</a>
-                                        </div>
-                                    </div>
-                                    <div class="info">
-                                        <h4><a href="{{ route('public.dokter.show', $dokter->slug) }}">{{ $dokter->name }}</a></h4>
-                                        <span>{{ $dokter->specialtyLabel() }}</span>
-                                        @if ($dokter->poli)
-                                            <small class="d-block text-muted mt-1">{{ $dokter->poli }}</small>
-                                        @endif
+            </div>
+            <div class="doctor-items text-center">
+                <div class="row rsud-gap justify-content-center">
+                    @forelse ($featuredDokters as $dokter)
+                        <div class="col-lg-4 col-md-6 single-item rsud-doctor-card">
+                            <div class="item">
+                                <div class="thumb">
+                                    <a href="{{ route('public.dokter.show', $dokter->slug) }}">
+                                        <img src="{{ $dokter->photoUrl() }}" alt="{{ $dokter->name }}">
+                                    </a>
+                                    <div class="button">
+                                        <a href="{{ route('public.dokter.show', $dokter->slug) }}">Lihat Jadwal</a>
                                     </div>
                                 </div>
+                                <div class="info">
+                                    <h4><a href="{{ route('public.dokter.show', $dokter->slug) }}">{{ $dokter->name }}</a></h4>
+                                    <span>{{ $dokter->specialtyLabel() }}</span>
+                                    @if ($dokter->poli)
+                                        <small class="d-block text-muted mt-1">{{ $dokter->poli }}</small>
+                                    @endif
+                                </div>
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @empty
+                        <div class="col-12">
+                            <p class="text-center text-muted mb-0">Belum ada data dokter.</p>
+                        </div>
+                    @endforelse
                 </div>
+            </div>
+            @if ($featuredDokters->isNotEmpty())
                 <div class="text-center rsud-section__cta">
                     <a class="btn btn-md btn-gradient" href="{{ route('public.dokter.index') }}">Semua Dokter</a>
                 </div>
-            </div>
-        </section>
-    @endif
+            @endif
+        </div>
+    </section>
 
     @if ($layanans->isNotEmpty())
         <section class="rsud-section bg-gray">

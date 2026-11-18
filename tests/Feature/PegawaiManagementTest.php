@@ -19,8 +19,8 @@ class PegawaiManagementTest extends TestCase
     {
         parent::setUp();
 
-        Permission::create(['name' => 'view dashboard', 'guard_name' => 'web']);
-        Permission::create(['name' => 'manage pegawai', 'guard_name' => 'web']);
+        Permission::findOrCreate('view dashboard', 'web');
+        Permission::findOrCreate('manage pegawai', 'web');
     }
 
     private function manager(): User
@@ -37,7 +37,6 @@ class PegawaiManagementTest extends TestCase
 
         $this->actingAs($this->manager())->post(route('admin.jabatan.store'), [
             'name' => 'Camat',
-            'sort_order' => 1,
             'is_active' => '1',
         ])->assertRedirect(route('admin.jabatan.index'));
 

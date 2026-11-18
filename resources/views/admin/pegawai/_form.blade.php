@@ -50,10 +50,8 @@
         @endif
         @error('photo')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
     </div>
-    <div class="col-md-6">
-        <label class="fw-semibold">Urutan Tampil</label>
-        <input type="number" name="sort_order" class="form-control" min="0" value="{{ old('sort_order', $item?->sort_order ?? 0) }}">
-        <div class="form-check form-switch mt-4">
+    <div class="col-md-6 d-flex align-items-end">
+        <div class="form-check form-switch mb-2">
             <input type="checkbox" name="is_published" value="1" class="form-check-input" id="pegawai-published" @checked(old('is_published', $item?->is_published ?? true))>
             <label class="form-check-label" for="pegawai-published">Tampilkan di website publik</label>
         </div>

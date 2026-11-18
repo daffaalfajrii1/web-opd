@@ -45,10 +45,12 @@
     </div>
 </div>
 
+@include('public.partials.clinicom.marquee')
+
 <header class="rsud-header">
     <div class="container box-nav">
         <div class="row">
-            <nav id="mainNav" class="navbar logo-less top-less navbar-default navbar-fixed white bootsnav on no-full nav-box no-background">
+            <nav id="mainNav" class="navbar logo-less navbar-default white bootsnav on no-full nav-box rsud-navbar">
                 <div class="container">
                     <div class="attr-nav contact hidden-xs">
                         <ul>

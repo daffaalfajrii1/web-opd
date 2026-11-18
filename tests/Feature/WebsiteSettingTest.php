@@ -156,7 +156,7 @@ class WebsiteSettingTest extends TestCase
         $home->assertSee('--bg-dark-1: #b91c1c', false);
         $home->assertSee('id="opd-theme-vars"', false);
         $home->assertSee('.kecamatan-hero', false);
-        $home->assertSee('background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 42%, #dc2626 100%) !important', false);
+        $home->assertSee('linear-gradient(135deg, #7f1d1d 0%, #b91c1c 42%, #dc2626 100%)', false);
     }
 
     public function test_not_found_page_uses_branded_layout(): void

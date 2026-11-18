@@ -43,7 +43,6 @@
                                 <th style="width:50px">No</th>
                                 <th>Judul</th>
                                 <th>Grup Menu</th>
-                                <th>Urutan</th>
                                 <th>Status</th>
                                 <th class="text-end" style="min-width:200px">Aksi</th>
                             </tr>
@@ -57,7 +56,6 @@
                                         <div class="text-muted fs-12">/profil/{{ $page->slug }}</div>
                                     </td>
                                     <td>{{ App\Models\Page::MENU_GROUPS[$page->menu_group] ?? $page->menu_group }}</td>
-                                    <td>{{ $page->sort_order }}</td>
                                     <td>
                                         <span class="badge {{ $page->is_published ? 'bg-soft-success text-success' : 'bg-soft-warning text-warning' }}">
                                             {{ $page->is_published ? 'Terbit' : 'Draft' }}

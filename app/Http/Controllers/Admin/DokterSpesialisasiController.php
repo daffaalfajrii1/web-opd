@@ -29,14 +29,13 @@ class DokterSpesialisasiController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_active' => ['nullable', 'boolean'],
         ], [], ['name' => 'nama spesialisasi']);
 
         DokterSpesialisasi::create([
             'name' => $validated['name'],
             'slug' => DokterSpesialisasi::uniqueSlug($validated['name']),
-            'sort_order' => $validated['sort_order'] ?? 0,
+            'sort_order' => ((int) DokterSpesialisasi::query()->max('sort_order')) + 1,
             'is_active' => $request->boolean('is_active', true),
         ]);
 
@@ -54,7 +53,6 @@ class DokterSpesialisasiController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_active' => ['nullable', 'boolean'],
         ], [], ['name' => 'nama spesialisasi']);
 
@@ -66,7 +64,6 @@ class DokterSpesialisasiController extends Controller
         $dokterSpesialisasi->update([
             'name' => $validated['name'],
             'slug' => $slug,
-            'sort_order' => $validated['sort_order'] ?? 0,
             'is_active' => $request->boolean('is_active'),
         ]);
 

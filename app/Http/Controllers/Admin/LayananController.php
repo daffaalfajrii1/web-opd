@@ -41,10 +41,13 @@ class LayananController extends Controller
     {
         $validated = $this->validateLayanan($request);
 
+        unset($validated['sort_order']);
+
         $layanan = Layanan::create([
             ...$validated,
             'code' => Layanan::generateCode(),
             'slug' => Layanan::uniqueSlug($validated['title']),
+            'sort_order' => ((int) Layanan::query()->max('sort_order')) + 1,
             'user_id' => Auth::id(),
             'is_active' => $request->boolean('is_active', true),
         ]);
@@ -69,6 +72,8 @@ class LayananController extends Controller
         if ($layanan->title !== $validated['title']) {
             $slug = Layanan::uniqueSlug($validated['title'], $layanan->id);
         }
+
+        unset($validated['sort_order']);
 
         $layanan->update([
             ...$validated,
@@ -177,12 +182,10 @@ class LayananController extends Controller
         return $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:5000'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ], [], [
             'title' => 'nama layanan',
             'description' => 'deskripsi',
-            'sort_order' => 'urutan',
             'is_active' => 'status aktif',
         ]);
     }
