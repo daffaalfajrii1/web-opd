@@ -23,7 +23,7 @@
     @stack('styles')
 </head>
 <body>
-    <div class="se-pre-con"></div>
+    {{-- Preloader dinonaktifkan: window.load sering terlewat di mobile/cache sehingga loading macet --}}
 
     @include('public.partials.clinicom.header')
 
@@ -53,7 +53,29 @@
     <script src="{{ asset('clinicom/assets/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('clinicom/assets/js/wow.min.js') }}"></script>
     <script src="{{ asset('clinicom/assets/js/bootsnav.js') }}"></script>
+    <script src="{{ asset('clinicom/assets/js/jquery.nice-select.min.js') }}"></script>
+    <script>
+        // Cegah error main.js jika plugin belum ada / load gagal
+        if (window.jQuery && !jQuery.fn.niceSelect) {
+            jQuery.fn.niceSelect = function () { return this; };
+        }
+    </script>
     <script src="{{ asset('clinicom/assets/js/main.js') }}"></script>
+    <script>
+        (function () {
+            function hidePreloader() {
+                var el = document.querySelector('.se-pre-con');
+                if (!el) return;
+                el.style.opacity = '0';
+                el.style.visibility = 'hidden';
+                el.style.pointerEvents = 'none';
+                setTimeout(function () { el.remove(); }, 400);
+            }
+            if (document.readyState === 'complete') hidePreloader();
+            else window.addEventListener('load', hidePreloader);
+            setTimeout(hidePreloader, 1500);
+        })();
+    </script>
     @stack('scripts')
 </body>
 </html>

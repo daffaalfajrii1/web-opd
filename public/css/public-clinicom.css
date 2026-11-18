@@ -1,4 +1,10 @@
 /* RSUD Clinicom overrides */
+
+/* Jangan biarkan preloader menahan layar jika JS gagal */
+.se-pre-con {
+    display: none !important;
+}
+
 .rsud-wa-fab {
     position: fixed;
     right: 1.25rem;
