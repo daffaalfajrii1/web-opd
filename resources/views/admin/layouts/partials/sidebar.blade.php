@@ -73,6 +73,15 @@
                     </li>
                 @endcan
 
+                @can('manage link layanan')
+                    <li class="nxl-item {{ request()->routeIs('admin.link-layanan.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.link-layanan.index') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-link"></i></span>
+                            <span class="nxl-mtext">Link Layanan</span>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('manage profil')
                     <li class="nxl-item {{ request()->routeIs('admin.halaman.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.halaman.index') }}" class="nxl-link">

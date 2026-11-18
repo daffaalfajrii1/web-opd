@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\NavMenuController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\LayananController;
+use App\Http\Controllers\Admin\LayananLinkController;
 use App\Http\Controllers\Admin\LayananPengajuanController;
 use App\Http\Controllers\Admin\PengumumanController;
 use App\Http\Controllers\Admin\RoleController;
@@ -156,6 +157,13 @@ Route::middleware(['auth', 'verified', PermissionMiddleware::using('view dashboa
 
                 Route::patch('layanan-pengajuan/{layananPengajuan}/status', [LayananPengajuanController::class, 'updateStatus'])
                     ->name('layanan-pengajuan.status');
+            });
+
+        Route::middleware(PermissionMiddleware::using('manage link layanan'))
+            ->group(function () {
+                Route::resource('link-layanan', LayananLinkController::class)
+                    ->parameters(['link-layanan' => 'linkLayanan'])
+                    ->except(['show']);
             });
 
         Route::middleware(PermissionMiddleware::using('manage users'))

@@ -81,16 +81,19 @@ class NavMenuController extends Controller
 
     public function destroy(NavMenu $navMenu): RedirectResponse
     {
-        if ($navMenu->pages()->exists()) {
-            return back()->with('error', 'Menu masih memiliki halaman. Pindahkan/hapus halaman dulu.');
-        }
+        $submenuCount = $navMenu->pages()->count();
 
+        $navMenu->pages()->delete();
         $navMenu->delete();
         Page::clearMenuCache();
 
+        $message = $submenuCount > 0
+            ? "Menu navbar dan {$submenuCount} sub-menu berhasil dihapus."
+            : 'Menu navbar berhasil dihapus.';
+
         return redirect()
             ->route('admin.nav-menu.index')
-            ->with('success', 'Menu navbar berhasil dihapus.');
+            ->with('success', $message);
     }
 
     public function reorder(Request $request): RedirectResponse

@@ -170,4 +170,32 @@
             </div>
         </section>
     @endif
+
+    @if (($layananLinks ?? collect())->isNotEmpty())
+        <section class="rsud-strip rsud-strip--mint">
+            <div class="container">
+                <div class="rsud-strip__head">
+                    <div>
+                        <p class="rsud-kicker">Akses Cepat</p>
+                        <h2 class="rsud-title">Link Layanan</h2>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    @foreach ($layananLinks as $link)
+                        <div class="col-6 col-md-4 col-lg-2 mb-4">
+                            <a href="{{ $link->url }}" class="rsud-link-layanan" target="_blank" rel="noopener">
+                                <span class="rsud-link-layanan__logo">
+                                    <img src="{{ $link->logoUrl() }}" alt="{{ $link->title }}">
+                                </span>
+                                <strong>{{ $link->title }}</strong>
+                                @if ($link->description)
+                                    <small>{{ $link->description }}</small>
+                                @endif
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
 @endsection

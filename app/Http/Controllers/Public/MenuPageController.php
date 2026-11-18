@@ -23,6 +23,8 @@ class MenuPageController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
+        $navMenu->load(['pages' => fn ($q) => $q->published()->ordered()->select(['id', 'title', 'slug', 'nav_menu_id', 'sort_order'])]);
+
         return view('public.pages.show', compact('page', 'navMenu'));
     }
 }

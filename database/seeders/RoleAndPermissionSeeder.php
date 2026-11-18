@@ -26,6 +26,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage nav menu',
             'manage pengumuman',
             'manage layanan',
+            'manage link layanan',
             'manage pengaturan',
         ];
 
@@ -58,6 +59,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage nav menu',
             'manage pengumuman',
             'manage layanan',
+            'manage link layanan',
         ]);
 
         $editor = Role::firstOrCreate([

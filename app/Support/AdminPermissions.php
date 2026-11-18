@@ -21,6 +21,7 @@ class AdminPermissions
         'manage dokter' => 'Kelola dokter & jadwal',
         'manage pengumuman' => 'Kelola pengumuman',
         'manage layanan' => 'Kelola layanan publik',
+        'manage link layanan' => 'Kelola link layanan beranda',
         'manage pengaturan' => 'Kelola pengaturan website',
     ];
 
@@ -60,6 +61,7 @@ class AdminPermissions
                 'manage dokter',
                 'manage pengumuman',
                 'manage layanan',
+                'manage link layanan',
             ],
         ],
         User::ROLE_EDITOR => [

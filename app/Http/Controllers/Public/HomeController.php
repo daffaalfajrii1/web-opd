@@ -8,6 +8,7 @@ use App\Models\Berita;
 use App\Models\Dokter;
 use App\Models\Galeri;
 use App\Models\Layanan;
+use App\Models\LayananLink;
 use App\Models\Pegawai;
 use App\Models\Pengumuman;
 use Illuminate\Support\Facades\Schema;
@@ -56,6 +57,14 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
+        $layananLinks = collect();
+        if (Schema::hasTable('layanan_links')) {
+            $layananLinks = LayananLink::query()
+                ->active()
+                ->ordered()
+                ->get();
+        }
+
         $totalPegawai = Pegawai::query()->published()->count();
 
         $featuredDokters = collect();
@@ -76,6 +85,7 @@ class HomeController extends Controller
             'latestPengumumans',
             'featuredGaleris',
             'layanans',
+            'layananLinks',
             'totalPegawai',
             'totalDokter',
             'featuredDokters',
