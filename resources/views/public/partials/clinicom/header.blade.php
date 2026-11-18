@@ -2,53 +2,60 @@
     $logoUrl = $websiteSettings->logoUrl() ?? asset('clinicom/assets/img/logo.png');
 @endphp
 
-<div class="top-bar-area">
+<div class="top-bar-area rsud-topbar">
     <div class="container">
-        <div class="row align-center">
-            <div class="col-lg-3 logo">
+        <div class="row align-items-center">
+            <div class="col-lg-3 col-md-12 rsud-topbar__logo">
                 <a href="{{ route('home') }}">
                     <img src="{{ $logoUrl }}" class="logo" alt="{{ $websiteSettings->siteName() }}">
                 </a>
             </div>
-            <div class="col-lg-9 address-info text-right">
-                <div class="info box">
-                    <ul>
-                        @if ($websiteSettings->contact_email)
-                            <li>
-                                <div class="icon"><i class="flaticon-email"></i></div>
-                                <div class="info"><span>Email</span> {{ $websiteSettings->contact_email }}</div>
-                            </li>
-                        @endif
-                        @if ($websiteSettings->contact_phone)
-                            <li>
-                                <div class="icon"><i class="flaticon-call"></i></div>
-                                <div class="info"><span>Telepon</span> {{ $websiteSettings->contact_phone }}</div>
-                            </li>
-                        @endif
-                        @if ($websiteSettings->contact_address)
-                            <li>
-                                <div class="icon"><i class="flaticon-clock-1"></i></div>
-                                <div class="info"><span>Alamat</span> {{ \Illuminate\Support\Str::limit($websiteSettings->contact_address, 40) }}</div>
-                            </li>
-                        @endif
-                    </ul>
-                </div>
+            <div class="col-lg-9 col-md-12">
+                <ul class="rsud-topbar__contacts">
+                    @if ($websiteSettings->contact_email)
+                        <li>
+                            <span class="rsud-topbar__icon"><i class="fas fa-envelope"></i></span>
+                            <span class="rsud-topbar__meta">
+                                <small>Email</small>
+                                <a href="mailto:{{ $websiteSettings->contact_email }}">{{ $websiteSettings->contact_email }}</a>
+                            </span>
+                        </li>
+                    @endif
+                    @if ($websiteSettings->contact_phone)
+                        <li>
+                            <span class="rsud-topbar__icon"><i class="fas fa-phone"></i></span>
+                            <span class="rsud-topbar__meta">
+                                <small>Telepon</small>
+                                <a href="tel:{{ preg_replace('/\s+/', '', $websiteSettings->contact_phone) }}">{{ $websiteSettings->contact_phone }}</a>
+                            </span>
+                        </li>
+                    @endif
+                    @if ($websiteSettings->contact_address)
+                        <li class="rsud-topbar__address">
+                            <span class="rsud-topbar__icon"><i class="fas fa-map-marker-alt"></i></span>
+                            <span class="rsud-topbar__meta">
+                                <small>Alamat</small>
+                                <span>{{ \Illuminate\Support\Str::limit($websiteSettings->contact_address, 48) }}</span>
+                            </span>
+                        </li>
+                    @endif
+                </ul>
             </div>
         </div>
     </div>
 </div>
 
-<header>
+<header class="rsud-header">
     <div class="container box-nav">
         <div class="row">
             <nav id="mainNav" class="navbar logo-less top-less navbar-default navbar-fixed white bootsnav on no-full nav-box no-background">
                 <div class="container">
-                    <div class="attr-nav contact">
+                    <div class="attr-nav contact hidden-xs">
                         <ul>
                             <li>
                                 <i class="fas fa-stethoscope"></i>
                                 <p>
-                                    {{ $websiteSettings->shortName() }}
+                                    Hotline
                                     <span>{{ $websiteSettings->contact_phone ?: 'Layanan RSUD' }}</span>
                                 </p>
                             </li>

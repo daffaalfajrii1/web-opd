@@ -1,8 +1,250 @@
 /* RSUD Clinicom overrides */
 
-/* Jangan biarkan preloader menahan layar jika JS gagal */
 .se-pre-con {
     display: none !important;
+}
+
+/* ---------- Top bar kontak ---------- */
+.rsud-topbar {
+    background: #0b3d4a;
+    color: #fff;
+    padding: 0.85rem 0;
+}
+
+.rsud-topbar__logo {
+    margin-bottom: 0.75rem;
+}
+
+.rsud-topbar__logo img,
+.navbar-brand .logo {
+    max-height: 48px;
+    width: auto;
+}
+
+.rsud-topbar__contacts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.75rem 1.25rem;
+}
+
+.rsud-topbar__contacts li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.rsud-topbar__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rsud-topbar__meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    min-width: 0;
+}
+
+.rsud-topbar__meta small {
+    opacity: 0.75;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.rsud-topbar__meta a,
+.rsud-topbar__meta span {
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 0.92rem;
+    word-break: break-word;
+}
+
+@media (max-width: 991.98px) {
+    .rsud-topbar__logo {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .rsud-topbar__contacts {
+        justify-content: center;
+    }
+
+    .rsud-topbar__address {
+        flex: 1 1 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .rsud-topbar__address .rsud-topbar__meta {
+        align-items: center;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .rsud-topbar__contacts {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+    }
+
+    .rsud-topbar__contacts li {
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        padding: 0.7rem 0.85rem;
+    }
+
+    .rsud-topbar__address {
+        flex: none;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .rsud-topbar__address .rsud-topbar__meta {
+        align-items: flex-start;
+    }
+}
+
+/* ---------- Section spacing ---------- */
+.rsud-section {
+    padding: 4.5rem 0;
+}
+
+.rsud-section--search {
+    padding: 0 0 1.5rem;
+    margin-top: -2.5rem;
+    position: relative;
+    z-index: 3;
+}
+
+.rsud-section__cta {
+    margin-top: 2rem;
+}
+
+.rsud-gap > [class*="col-"] {
+    margin-bottom: 1.5rem;
+}
+
+.rsud-lead {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.rsud-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.rsud-actions .btn {
+    margin: 0;
+}
+
+.rsud-doctor-search {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.35rem 1.5rem;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
+}
+
+.rsud-doctor-search__form > [class*="col-"] {
+    margin-bottom: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .rsud-doctor-search__form > [class*="col-"] {
+        margin-bottom: 0;
+    }
+}
+
+.rsud-stats .rsud-stat-card {
+    background: #fff;
+    border: 1px solid #e8eef0;
+    border-radius: 12px;
+    padding: 1.35rem 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 24px rgba(11, 61, 74, 0.06);
+}
+
+.rsud-stat-card h2 {
+    margin: 0 0 0.35rem;
+    color: #0b3d4a;
+    font-weight: 700;
+}
+
+.rsud-stat-card p {
+    margin: 0;
+    color: #5b6b73;
+}
+
+.rsud-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: 100%;
+    box-shadow: 0 10px 28px rgba(11, 61, 74, 0.07);
+    border: 1px solid #eef2f4;
+    position: relative;
+}
+
+.rsud-card h4 {
+    margin: 0.35rem 0 0.75rem;
+    line-height: 1.35;
+}
+
+.rsud-card h4 a {
+    color: #12363f;
+}
+
+.rsud-card p {
+    color: #5b6b73;
+    margin-bottom: 1rem;
+}
+
+.rsud-card__meta {
+    display: block;
+    color: #7a8a92;
+    margin-bottom: 0.35rem;
+}
+
+.rsud-card__badge {
+    display: inline-block;
+    background: #0b3d4a;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+}
+
+.rsud-card__link {
+    font-weight: 700;
+    color: #0b3d4a !important;
+}
+
+.rsud-doctor-card a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.rsud-doctor-card .thumb img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
 }
 
 .rsud-wa-fab {
@@ -32,7 +274,19 @@
 }
 
 @media (max-width: 575.98px) {
-    .rsud-wa-fab span { display: none; }
+    .rsud-section {
+        padding: 3rem 0;
+    }
+
+    .rsud-section--search {
+        margin-top: -1.25rem;
+        padding-bottom: 1rem;
+    }
+
+    .rsud-wa-fab span {
+        display: none;
+    }
+
     .rsud-wa-fab {
         width: 3.25rem;
         height: 3.25rem;
@@ -40,37 +294,35 @@
         justify-content: center;
         border-radius: 50%;
     }
-}
 
-.rsud-doctor-search {
-    background: #fff;
-    border-radius: 8px;
-    padding: 1.25rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,.08);
-    margin-top: -40px;
-    position: relative;
-    z-index: 2;
-}
+    .rsud-actions {
+        flex-direction: column;
+    }
 
-.rsud-doctor-card a {
-    color: inherit;
-    text-decoration: none;
-}
-
-.rsud-doctor-card .thumb img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-}
-
-.top-bar-area .logo img,
-.navbar-brand .logo {
-    max-height: 52px;
-    width: auto;
+    .rsud-actions .btn {
+        width: 100%;
+    }
 }
 
 /* Content pages compatibility */
 .kecamatan-content img {
     max-width: 100%;
     height: auto;
+}
+
+/* Breadcrumb / inner pages breathing room */
+main > .breadcrumb-area + * ,
+main > .rsud-section:first-child {
+    margin-top: 0;
+}
+
+.breadcrumb-area {
+    margin-bottom: 0;
+}
+
+body .doctors-area.default-padding,
+body .blog-area.default-padding,
+body .about-area.default-padding {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
 }
