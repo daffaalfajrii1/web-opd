@@ -68,14 +68,13 @@
                                     </td>
                                     <td class="text-end">
                                         <div class="kecamatan-table-actions justify-content-end">
-                                            <a href="{{ route('admin.dokter.edit', $dokter) }}" class="btn btn-sm btn-primary" title="Edit dokter">
+                                            <a href="{{ route('admin.dokter.edit', $dokter) }}" class="btn btn-sm btn-primary px-2" title="Edit dokter">
                                                 <i class="feather-edit-2"></i>
-                                                <span class="d-none d-xl-inline ms-1">Edit</span>
                                             </a>
                                             <form action="{{ route('admin.dokter.destroy', $dokter) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus dokter ini beserta jadwalnya?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus dokter">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger px-2" title="Hapus dokter">
                                                     <i class="feather-trash-2"></i>
                                                 </button>
                                             </form>

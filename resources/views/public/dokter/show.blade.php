@@ -11,25 +11,43 @@
         ],
     ])
 
-    <div class="doctor-single-area text-center overflow-hidden default-padding">
+    <div class="doctor-single-area text-center overflow-hidden default-padding rsud-content-block">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
                     <div class="top-info">
                         <ul>
                             <li>
-                                @if ($dokter->photoUrl())
-                                    <img src="{{ $dokter->photoUrl() }}" alt="{{ $dokter->name }}">
-                                @else
-                                    <img src="{{ asset('clinicom/assets/img/doctor.png') }}" alt="{{ $dokter->name }}">
-                                @endif
+                                <img src="{{ $dokter->photoUrl() }}" alt="{{ $dokter->name }}">
                             </li>
                             <li>
                                 <h4>{{ $dokter->name }}</h4>
                                 <span>{{ $dokter->specialtyLabel() }}</span>
+                                @if ($dokter->poli)
+                                    <small class="d-block text-muted mt-1">{{ $dokter->poli }}</small>
+                                @endif
                             </li>
                         </ul>
                     </div>
+
+                    <ul class="list-inline rsud-doctor-contacts mb-4">
+                        @if ($dokter->phone)
+                            <li class="list-inline-item mx-2 my-1">
+                                <a href="tel:{{ preg_replace('/\s+/', '', $dokter->phone) }}"><i class="fas fa-phone"></i> {{ $dokter->phone }}</a>
+                            </li>
+                        @endif
+                        @if ($dokter->email)
+                            <li class="list-inline-item mx-2 my-1">
+                                <a href="mailto:{{ $dokter->email }}"><i class="fas fa-envelope"></i> {{ $dokter->email }}</a>
+                            </li>
+                        @endif
+                        @if ($dokter->facebook_url)
+                            <li class="list-inline-item mx-2 my-1">
+                                <a href="{{ $dokter->facebook_url }}" target="_blank" rel="noopener"><i class="fab fa-facebook"></i> Facebook</a>
+                            </li>
+                        @endif
+                    </ul>
+
                     @if ($dokter->bio)
                         <div class="bottom-info text-left">
                             <p>{!! nl2br(e($dokter->bio)) !!}</p>
@@ -40,7 +58,7 @@
                         <h3 class="text-center mb-4">Jadwal Praktik</h3>
                         @if ($dokter->jadwals->isNotEmpty())
                             <div class="table-responsive">
-                                <table class="table table-bordered bg-white">
+                                <table class="table table-bordered rsud-table">
                                     <thead>
                                         <tr>
                                             <th>Hari</th>

@@ -31,6 +31,26 @@
         @endif
         @error('dokter_spesialisasi_id')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
     </div>
+    <div class="col-md-4">
+        <label class="fw-semibold">Telepon</label>
+        <input type="text" name="phone" class="form-control" value="{{ old('phone', $item?->phone) }}" placeholder="Contoh: 0821xxxxxxx">
+        @error('phone')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
+    </div>
+    <div class="col-md-4">
+        <label class="fw-semibold">Email</label>
+        <input type="email" name="email" class="form-control" value="{{ old('email', $item?->email) }}" placeholder="opsional">
+        @error('email')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
+    </div>
+    <div class="col-md-4">
+        <label class="fw-semibold">Poli / Unit</label>
+        <input type="text" name="poli" class="form-control" value="{{ old('poli', $item?->poli) }}" placeholder="Contoh: Poli Anak">
+        @error('poli')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
+    </div>
+    <div class="col-md-8">
+        <label class="fw-semibold">Facebook</label>
+        <input type="url" name="facebook_url" class="form-control" value="{{ old('facebook_url', $item?->facebook_url) }}" placeholder="https://facebook.com/...">
+        @error('facebook_url')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
+    </div>
     <div class="col-md-6">
         <label class="fw-semibold">Foto Dokter</label>
         <input type="file" id="dokter-photo-source" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp">

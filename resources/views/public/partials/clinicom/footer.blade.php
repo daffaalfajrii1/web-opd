@@ -39,6 +39,23 @@
                                 <li><i class="fas fa-envelope"></i> {{ $websiteSettings->contact_email }}</li>
                             @endif
                         </ul>
+                        <ul class="list-inline rsud-footer-social mt-3 mb-0">
+                            @if ($websiteSettings->social_facebook)
+                                <li class="list-inline-item">
+                                    <a href="{{ $websiteSettings->social_facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                </li>
+                            @endif
+                            @if ($websiteSettings->social_instagram)
+                                <li class="list-inline-item">
+                                    <a href="{{ $websiteSettings->social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                </li>
+                            @endif
+                            @if ($websiteSettings->social_youtube)
+                                <li class="list-inline-item">
+                                    <a href="{{ $websiteSettings->social_youtube }}" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                                </li>
+                            @endif
+                        </ul>
                     </div>
                 </div>
             </div>

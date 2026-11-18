@@ -48,6 +48,10 @@ class DokterTest extends TestCase
         $response = $this->actingAs($user)->post(route('admin.dokter.store'), [
             'name' => 'dr Andi Wijaya',
             'dokter_spesialisasi_id' => $spesialisasi->id,
+            'phone' => '082112345678',
+            'email' => 'andi@example.com',
+            'facebook_url' => 'https://facebook.com/drandi',
+            'poli' => 'Poli Jantung',
             'bio' => 'Dokter spesialis jantung',
             'sort_order' => 1,
             'is_active' => '1',
@@ -59,6 +63,8 @@ class DokterTest extends TestCase
         $dokter = Dokter::first();
         $this->assertNotNull($dokter);
         $this->assertSame('dr-andi-wijaya', $dokter->slug);
+        $this->assertSame('082112345678', $dokter->phone);
+        $this->assertSame('Poli Jantung', $dokter->poli);
         Storage::disk('public')->assertExists($dokter->photo_path);
 
         $jadwalResponse = $this->actingAs($user)->post(route('admin.dokter.jadwal.store', $dokter), [

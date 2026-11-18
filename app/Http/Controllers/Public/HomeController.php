@@ -7,7 +7,6 @@ use App\Models\Agenda;
 use App\Models\Berita;
 use App\Models\Dokter;
 use App\Models\Galeri;
-use App\Models\Jabatan;
 use App\Models\Layanan;
 use App\Models\Pegawai;
 use App\Models\Pengumuman;
@@ -57,10 +56,11 @@ class HomeController extends Controller
             ->get();
 
         $totalPegawai = Pegawai::query()->published()->count();
-        $totalJabatan = Jabatan::query()->active()->count();
 
         $featuredDokters = collect();
+        $totalDokter = 0;
         if (Schema::hasTable('dokters')) {
+            $totalDokter = Dokter::query()->active()->count();
             $featuredDokters = Dokter::query()
                 ->with('spesialisasi')
                 ->active()
@@ -76,7 +76,7 @@ class HomeController extends Controller
             'featuredGaleris',
             'layanans',
             'totalPegawai',
-            'totalJabatan',
+            'totalDokter',
             'featuredDokters',
         ));
     }

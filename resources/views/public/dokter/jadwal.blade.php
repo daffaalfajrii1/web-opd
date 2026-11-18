@@ -11,10 +11,10 @@
         ],
     ])
 
-    <div class="default-padding bg-gray bottom-less">
+    <div class="default-padding bg-gray bottom-less rsud-content-block">
         <div class="container">
-            <form method="GET" class="row g-2 mb-5">
-                <div class="col-md-5">
+            <form method="GET" class="row mb-5">
+                <div class="col-md-5 mb-2">
                     <select name="dokter_id" class="form-control">
                         <option value="">Semua dokter</option>
                         @foreach ($dokters as $dokterOption)
@@ -22,7 +22,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-2">
                     <select name="day" class="form-control">
                         <option value="">Semua hari</option>
                         @foreach ($dayOptions as $dayValue => $dayLabel)
@@ -30,16 +30,16 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-gradient w-100">Filter</button>
+                <div class="col-md-3 mb-2">
+                    <button type="submit" class="btn btn-gradient btn-block">Filter</button>
                 </div>
             </form>
 
             @forelse($groupedByDay as $dayOfWeek => $dayJadwals)
                 <div class="mb-5">
-                    <h4 class="mb-3">{{ $dayOptions[$dayOfWeek] ?? '—' }}</h4>
+                    <h4 class="mb-3 text-dark">{{ $dayOptions[$dayOfWeek] ?? '—' }}</h4>
                     <div class="table-responsive">
-                        <table class="table table-bordered bg-white">
+                        <table class="table table-bordered rsud-table">
                             <thead>
                                 <tr>
                                     <th>Dokter</th>

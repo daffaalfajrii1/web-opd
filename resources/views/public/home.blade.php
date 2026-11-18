@@ -23,18 +23,18 @@
     <section class="rsud-section about-area">
         <div class="container">
             <div class="row align-items-center rsud-gap">
-                <div class="col-lg-6">
-                    <div class="site-heading text-left">
+                <div class="col-lg-7">
+                    <div class="site-heading text-left rsud-portal-heading">
                         <h4>Portal Resmi</h4>
                         <h2>{{ $websiteSettings->siteName() }}</h2>
                     </div>
                     <p class="rsud-lead">{{ $websiteSettings->site_tagline ?: 'Sumber informasi, layanan, dan transparansi '.$websiteSettings->siteName().'.' }}</p>
                     <div class="rsud-actions">
                         <a class="btn btn-md btn-gradient" href="{{ route('public.layanan.index') }}">Layanan Online</a>
-                        <a class="btn btn-md btn-light border" href="{{ route('public.dokter.jadwal') }}">Jadwal Dokter</a>
+                        <a class="btn btn-md btn-border light" href="{{ route('public.dokter.jadwal') }}">Jadwal Dokter</a>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-5">
                     <div class="row text-center rsud-stats">
                         <div class="col-6">
                             <div class="rsud-stat-card">
@@ -44,20 +44,8 @@
                         </div>
                         <div class="col-6">
                             <div class="rsud-stat-card">
-                                <h2>{{ $layanans->count() }}</h2>
-                                <p>Layanan Aktif</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="rsud-stat-card">
-                                <h2>{{ $featuredDokters->count() }}</h2>
+                                <h2>{{ $totalDokter }}</h2>
                                 <p>Dokter</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="rsud-stat-card">
-                                <h2>{{ $totalJabatan }}</h2>
-                                <p>Jabatan</p>
                             </div>
                         </div>
                     </div>
@@ -69,15 +57,15 @@
     @if ($latestPengumumans->isNotEmpty())
         <section class="rsud-section bg-gray">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10">
                         <div class="site-heading text-center">
                             <h4>Informasi Penting</h4>
                             <h2>Pengumuman</h2>
                         </div>
                     </div>
                 </div>
-                <div class="row rsud-gap">
+                <div class="row rsud-gap justify-content-center">
                     @foreach ($latestPengumumans as $pengumuman)
                         <div class="col-lg-4 col-md-6">
                             <article class="rsud-card">
@@ -102,15 +90,15 @@
     @if ($latestBeritas->isNotEmpty())
         <section class="rsud-section">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10">
                         <div class="site-heading text-center">
                             <h4>Update Terkini</h4>
                             <h2>Berita Terbaru</h2>
                         </div>
                     </div>
                 </div>
-                <div class="row rsud-gap">
+                <div class="row rsud-gap justify-content-center">
                     @foreach ($latestBeritas as $berita)
                         <div class="col-lg-4 col-md-6">
                             <article class="rsud-card">
@@ -137,15 +125,15 @@
     @if ($upcomingAgendas->isNotEmpty())
         <section class="rsud-section bg-gray">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10">
                         <div class="site-heading text-center">
                             <h4>Kalender</h4>
                             <h2>Agenda Mendatang</h2>
                         </div>
                     </div>
                 </div>
-                <div class="row rsud-gap">
+                <div class="row rsud-gap justify-content-center">
                     @foreach ($upcomingAgendas as $agenda)
                         <div class="col-lg-4 col-md-6">
                             <article class="rsud-card">
@@ -167,8 +155,8 @@
     @if ($featuredDokters->isNotEmpty())
         <section class="rsud-section doctors-area three-colum bottom-less">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10">
                         <div class="site-heading text-center">
                             <h4>Tenaga Medis</h4>
                             <h2>Dokter Kami</h2>
@@ -177,7 +165,7 @@
                     </div>
                 </div>
                 <div class="doctor-items text-center">
-                    <div class="row rsud-gap">
+                    <div class="row rsud-gap justify-content-center">
                         @foreach ($featuredDokters as $dokter)
                             <div class="col-lg-4 col-md-6 single-item rsud-doctor-card">
                                 <div class="item">
@@ -192,6 +180,9 @@
                                     <div class="info">
                                         <h4><a href="{{ route('public.dokter.show', $dokter->slug) }}">{{ $dokter->name }}</a></h4>
                                         <span>{{ $dokter->specialtyLabel() }}</span>
+                                        @if ($dokter->poli)
+                                            <small class="d-block text-muted mt-1">{{ $dokter->poli }}</small>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -208,15 +199,15 @@
     @if ($layanans->isNotEmpty())
         <section class="rsud-section bg-gray">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10">
                         <div class="site-heading text-center">
                             <h4>Pelayanan</h4>
                             <h2>Layanan Online</h2>
                         </div>
                     </div>
                 </div>
-                <div class="row rsud-gap">
+                <div class="row rsud-gap justify-content-center">
                     @foreach ($layanans as $layanan)
                         <div class="col-lg-4 col-md-6">
                             <article class="rsud-card">

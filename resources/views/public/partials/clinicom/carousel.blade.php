@@ -1,6 +1,6 @@
-@if ($websiteCarousels->isNotEmpty())
-    <div class="banner-area">
-        <div id="bootcarousel" class="carousel responsive-top-pad-110p text-large slide carousel-fade animate_text" data-ride="carousel" data-interval="{{ $websiteSettings->carouselDurationMs() }}">
+@if (($websiteCarousels ?? collect())->isNotEmpty())
+    <div class="banner-area rsud-banner">
+        <div id="bootcarousel" class="carousel text-large slide carousel-fade animate_text" data-ride="carousel" data-interval="{{ $websiteSettings->carouselDurationMs() }}">
             <div class="carousel-inner carousel-zoom">
                 @foreach ($websiteCarousels as $index => $slide)
                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
@@ -41,6 +41,19 @@
                     <span class="sr-only">Next</span>
                 </a>
             @endif
+        </div>
+    </div>
+@else
+    <div class="rsud-banner rsud-banner--fallback">
+        <div class="container">
+            <div class="rsud-banner__fallback-content">
+                <h2>{{ $websiteSettings->siteName() }}</h2>
+                <p>{{ $websiteSettings->site_tagline ?: 'Website resmi layanan kesehatan Kabupaten Rejang Lebong.' }}</p>
+                <div class="rsud-actions">
+                    <a class="btn btn-md btn-gradient" href="{{ route('public.dokter.index') }}">Cari Dokter</a>
+                    <a class="btn btn-md btn-light border" href="{{ route('public.layanan.index') }}">Layanan Online</a>
+                </div>
+            </div>
         </div>
     </div>
 @endif

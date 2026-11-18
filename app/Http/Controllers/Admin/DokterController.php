@@ -51,6 +51,10 @@ class DokterController extends Controller
             'slug' => Dokter::uniqueSlug($validated['name']),
             'dokter_spesialisasi_id' => $spesialisasi->id,
             'specialty' => $spesialisasi->name,
+            'phone' => $validated['phone'] ?? null,
+            'email' => $validated['email'] ?? null,
+            'facebook_url' => $validated['facebook_url'] ?? null,
+            'poli' => $validated['poli'] ?? null,
             'bio' => $validated['bio'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'photo_path' => $this->storePhoto($request),
@@ -93,6 +97,10 @@ class DokterController extends Controller
             'slug' => $slug,
             'dokter_spesialisasi_id' => $spesialisasi->id,
             'specialty' => $spesialisasi->name,
+            'phone' => $validated['phone'] ?? null,
+            'email' => $validated['email'] ?? null,
+            'facebook_url' => $validated['facebook_url'] ?? null,
+            'poli' => $validated['poli'] ?? null,
             'bio' => $validated['bio'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_active' => $request->boolean('is_active'),
@@ -172,9 +180,19 @@ class DokterController extends Controller
     /** @return array<string, mixed> */
     private function validateDokter(Request $request): array
     {
+        foreach (['phone', 'email', 'facebook_url', 'poli', 'bio'] as $optional) {
+            if ($request->input($optional) === '') {
+                $request->merge([$optional => null]);
+            }
+        }
+
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'dokter_spesialisasi_id' => ['required', 'integer', 'exists:dokter_spesialisasis,id'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'facebook_url' => ['nullable', 'url', 'max:255'],
+            'poli' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'photo' => ['nullable', 'image', 'max:2048'],
@@ -183,6 +201,10 @@ class DokterController extends Controller
         ], [], [
             'name' => 'nama dokter',
             'dokter_spesialisasi_id' => 'spesialisasi',
+            'phone' => 'telepon',
+            'email' => 'email',
+            'facebook_url' => 'facebook',
+            'poli' => 'poli / unit',
             'photo' => 'foto dokter',
         ]);
     }

@@ -4,6 +4,101 @@
     display: none !important;
 }
 
+/* ---------- Header / nav ---------- */
+.rsud-header {
+    position: relative;
+    z-index: 20;
+    margin-bottom: 1.25rem;
+}
+
+.rsud-header .box-nav {
+    margin-top: -1.5rem;
+}
+
+.rsud-header .nav.navbar-nav > li > a {
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+}
+
+@media (max-width: 991.98px) {
+    .rsud-header {
+        margin-bottom: 0.5rem;
+    }
+
+    .rsud-header .box-nav {
+        margin-top: 0;
+    }
+}
+
+/* ---------- Banner / carousel dari pengaturan ---------- */
+.rsud-banner {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.5rem;
+}
+
+.rsud-banner .carousel-item,
+.rsud-banner .slider-thumb {
+    min-height: 420px;
+}
+
+.rsud-banner .slider-thumb {
+    background-position: center center;
+    background-size: cover;
+}
+
+.rsud-banner .content h2,
+.rsud-banner .content p {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.rsud-banner--fallback {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.16) 0%, transparent 42%),
+        radial-gradient(circle at 90% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 48%),
+        linear-gradient(
+            135deg,
+            var(--theme-dark, #003d47) 0%,
+            var(--theme-primary, #0b3d4a) 45%,
+            var(--theme-light, #1a7a8c) 100%
+        );
+    color: #fff;
+    padding: 5.5rem 0 4.5rem;
+}
+
+.rsud-banner__fallback-content {
+    max-width: 720px;
+}
+
+.rsud-banner__fallback-content h2 {
+    color: #fff;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    font-size: clamp(1.75rem, 4vw, 2.6rem);
+}
+
+.rsud-banner__fallback-content p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 767.98px) {
+    .rsud-banner .carousel-item,
+    .rsud-banner .slider-thumb {
+        min-height: 300px;
+    }
+
+    .rsud-banner--fallback {
+        padding: 3.5rem 0 3rem;
+        text-align: center;
+    }
+
+    .rsud-banner__fallback-content {
+        margin: 0 auto;
+    }
+}
+
 /* Banner halaman dalam: gradasi saja (tanpa gambar placeholder) */
 .breadcrumb-area.rsud-page-hero,
 .breadcrumb-area.gradient-bg,
@@ -34,20 +129,11 @@
     letter-spacing: 0.01em;
 }
 
-.breadcrumb-area.rsud-page-hero + section,
-.breadcrumb-area.rsud-page-hero + .rsud-section,
-.breadcrumb-area.rsud-page-hero + .container,
-main > .breadcrumb-area + .doctors-area,
-main > .breadcrumb-area + .blog-area,
-main > .breadcrumb-area + div,
-main > .breadcrumb-area ~ .container {
-    padding-top: 2.5rem;
-}
-
-/* Konten setelah hero */
-main .breadcrumb-area + * {
-    padding-top: 2.75rem;
-    padding-bottom: 3.5rem;
+/* Konten setelah hero gradasi */
+main .breadcrumb-area + *,
+.rsud-content-block {
+    padding-top: 3rem !important;
+    padding-bottom: 3.5rem !important;
 }
 
 /* ---------- Top bar kontak ---------- */
@@ -163,6 +249,33 @@ main .breadcrumb-area + * {
     }
 }
 
+/* ---------- Heading / Portal Resmi ---------- */
+.site-heading {
+    overflow: visible !important;
+    margin-top: 0 !important;
+}
+
+.site-heading.text-center {
+    text-align: center !important;
+}
+
+.site-heading.text-center h4,
+.site-heading.text-center h2,
+.site-heading.text-center p {
+    display: block;
+    width: 100%;
+}
+
+.rsud-portal-heading h4 {
+    padding-bottom: 0.35rem;
+    margin-bottom: 0.65rem;
+}
+
+.rsud-portal-heading h2 {
+    line-height: 1.25;
+    margin-bottom: 0.85rem;
+}
+
 /* ---------- Section spacing ---------- */
 .rsud-section {
     padding: 4.5rem 0;
@@ -187,6 +300,7 @@ main .breadcrumb-area + * {
     font-size: 1.05rem;
     line-height: 1.7;
     margin-bottom: 1.5rem;
+    color: #4b5c64;
 }
 
 .rsud-actions {
@@ -197,6 +311,14 @@ main .breadcrumb-area + * {
 
 .rsud-actions .btn {
     margin: 0;
+}
+
+.rsud-actions .btn.btn-border.light,
+.rsud-actions .btn.border {
+    background: #fff;
+    border: 1px solid #d5e0e4 !important;
+    color: #0b3d4a !important;
+    box-shadow: none;
 }
 
 .rsud-doctor-search {
@@ -220,8 +342,8 @@ main .breadcrumb-area + * {
     background: #fff;
     border: 1px solid #e8eef0;
     border-radius: 12px;
-    padding: 1.35rem 1rem;
-    margin-bottom: 1rem;
+    padding: 1.75rem 1rem;
+    margin-bottom: 0;
     box-shadow: 0 8px 24px rgba(11, 61, 74, 0.06);
 }
 
@@ -282,15 +404,97 @@ main .breadcrumb-area + * {
     color: #0b3d4a !important;
 }
 
+/* ---------- Dokter cards ---------- */
+.rsud-doctor-card .item {
+    height: 100%;
+}
+
 .rsud-doctor-card a {
     color: inherit;
     text-decoration: none;
 }
 
+.rsud-doctor-card .info h4,
+.rsud-doctor-card .info h4 a {
+    color: #12363f !important;
+}
+
+.rsud-doctor-card .info span {
+    color: var(--theme-primary, #0cb8b6) !important;
+}
+
 .rsud-doctor-card .thumb img {
-    width: 100%;
-    height: 280px;
+    width: 220px !important;
+    height: 220px !important;
     object-fit: cover;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.rsud-doctor-contacts a {
+    color: #0b3d4a !important;
+    font-weight: 600;
+}
+
+.rsud-doctor-contacts i {
+    margin-right: 0.35rem;
+    color: var(--theme-primary, #0cb8b6);
+}
+
+/* Tabel jadwal: teks gelap terbaca */
+.rsud-table {
+    background: #fff !important;
+    color: #1f2d33 !important;
+}
+
+.rsud-table thead th {
+    background: #f4f8f9 !important;
+    color: #334047 !important;
+    font-weight: 700;
+    border-color: #dce6ea !important;
+}
+
+.rsud-table tbody td,
+.rsud-table tbody th {
+    color: #1f2d33 !important;
+    background: #fff !important;
+    border-color: #e4ecef !important;
+    vertical-align: middle;
+}
+
+.rsud-table tbody a {
+    color: #0b3d4a !important;
+    font-weight: 600;
+}
+
+.doctor-single-area,
+.doctor-single-area .top-info,
+.doctor-single-area .bottom-info,
+.doctor-single-area h3,
+.doctor-single-area h4,
+.doctor-single-area p,
+.doctor-single-area span {
+    color: #1f2d33;
+}
+
+.doctor-single-area .top-info span {
+    color: var(--theme-primary, #0cb8b6) !important;
+}
+
+/* Footer social dari pengaturan website */
+.rsud-footer-social a {
+    display: inline-flex;
+    width: 38px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff !important;
+}
+
+.rsud-footer-social a:hover {
+    background: rgba(255, 255, 255, 0.22);
 }
 
 .rsud-wa-fab {
@@ -348,18 +552,17 @@ main .breadcrumb-area + * {
     .rsud-actions .btn {
         width: 100%;
     }
+
+    .rsud-doctor-card .thumb img {
+        width: 180px !important;
+        height: 180px !important;
+    }
 }
 
 /* Content pages compatibility */
 .kecamatan-content img {
     max-width: 100%;
     height: auto;
-}
-
-/* Breadcrumb / inner pages breathing room */
-main > .breadcrumb-area + * ,
-main > .rsud-section:first-child {
-    margin-top: 0;
 }
 
 .breadcrumb-area {
@@ -371,4 +574,9 @@ body .blog-area.default-padding,
 body .about-area.default-padding {
     padding-top: 4.5rem;
     padding-bottom: 4.5rem;
+}
+
+/* Admin jadwal compact */
+.rsud-jadwal-item .btn-sm {
+    min-width: 2.1rem;
 }
