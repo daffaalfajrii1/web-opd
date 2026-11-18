@@ -196,7 +196,7 @@ class LayananTest extends TestCase
         $response = $this->actingAs($user)->patch(route('admin.layanan-pengajuan.status', $pengajuan), [
             'status' => LayananPengajuan::STATUS_COMPLETED,
             'completion_method' => LayananPengajuan::COMPLETION_OFFICE_PICKUP,
-            'completion_message' => 'Silakan ambil di loket kecamatan dengan membawa KTP.',
+            'completion_message' => 'Silakan ambil di loket kantor dengan membawa KTP.',
         ]);
 
         $response->assertRedirect(route('admin.layanan-pengajuan.show', $pengajuan));
