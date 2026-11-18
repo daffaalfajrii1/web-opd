@@ -8,13 +8,13 @@
         'breadcrumbs' => [['label' => 'Berita']],
     ])
 
-    <section class="rsud-content-block">
+    <section class="rsud-block rsud-article-list">
         <div class="container">
-            <form method="get" class="row mb-5">
-                <div class="col-md-4 mb-2">
+            <form method="get" class="rsud-filter-bar row">
+                <div class="col-md-5 mb-3">
                     <input type="text" name="search" class="form-control" placeholder="Cari berita..." value="{{ request('search') }}">
                 </div>
-                <div class="col-md-4 mb-2">
+                <div class="col-md-4 mb-3">
                     <select name="kategori" class="form-control">
                         <option value="">Semua Kategori</option>
                         @foreach ($categories as $category)
@@ -22,7 +22,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4 mb-2">
+                <div class="col-md-3 mb-3">
                     <button type="submit" class="btn btn-gradient btn-block">Filter</button>
                 </div>
             </form>
@@ -34,7 +34,7 @@
                     </div>
                 @empty
                     <div class="col-12">
-                        <div class="bg-light p-5 text-center">
+                        <div class="rsud-empty">
                             <p class="mb-0">Belum ada berita yang dipublikasikan.</p>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
             </div>
 
             @if ($beritas->hasPages())
-                <div class="text-center mt-4">
+                <div class="text-center mt-5">
                     {{ $beritas->links() }}
                 </div>
             @endif

@@ -5,11 +5,11 @@
 @section('content')
     @include('public.partials.clinicom.carousel')
 
-    <section class="rsud-section rsud-section--search">
+    <section class="rsud-block rsud-block--search">
         <div class="container">
             <div class="rsud-doctor-search">
-                <form method="get" action="{{ route('public.dokter.index') }}" class="row rsud-doctor-search__form">
-                    <div class="col-md-8 col-sm-12">
+                <form method="get" action="{{ route('public.dokter.index') }}" class="row align-items-center">
+                    <div class="col-md-8 col-sm-12 mb-2 mb-md-0">
                         <input type="search" name="q" class="form-control" placeholder="Cari dokter / spesialisasi..." value="{{ request('q') }}">
                     </div>
                     <div class="col-md-4 col-sm-12">
@@ -20,10 +20,10 @@
         </div>
     </section>
 
-    <section class="rsud-section rsud-section--portal about-area">
+    <section class="rsud-block rsud-block--portal">
         <div class="container">
-            <div class="row align-items-center rsud-gap">
-                <div class="col-lg-7">
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-4 mb-lg-0">
                     <div class="site-heading text-left rsud-portal-heading">
                         <h4>Portal Resmi</h4>
                         <h2>{{ $websiteSettings->siteName() }}</h2>
@@ -54,7 +54,7 @@
         </div>
     </section>
 
-    <section class="rsud-section bg-gray">
+    <section class="rsud-block rsud-block--muted">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
@@ -76,14 +76,14 @@
                 @endforelse
             </div>
             @if ($latestBeritas->isNotEmpty())
-                <div class="text-center rsud-section__cta">
+                <div class="text-center rsud-block__cta">
                     <a class="btn btn-md btn-gradient" href="{{ route('public.berita.index') }}">Semua Berita</a>
                 </div>
             @endif
         </div>
     </section>
 
-    <section class="rsud-section">
+    <section class="rsud-block">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
@@ -113,14 +113,14 @@
                 @endforelse
             </div>
             @if ($latestPengumumans->isNotEmpty())
-                <div class="text-center rsud-section__cta">
+                <div class="text-center rsud-block__cta">
                     <a class="btn btn-md btn-gradient" href="{{ route('public.pengumuman.index') }}">Semua Pengumuman</a>
                 </div>
             @endif
         </div>
     </section>
 
-    <section class="rsud-section bg-gray">
+    <section class="rsud-block rsud-block--muted">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
@@ -147,14 +147,14 @@
                 @endforelse
             </div>
             @if ($upcomingAgendas->isNotEmpty())
-                <div class="text-center rsud-section__cta">
+                <div class="text-center rsud-block__cta">
                     <a class="btn btn-md btn-gradient" href="{{ route('public.agenda.index') }}">Semua Agenda</a>
                 </div>
             @endif
         </div>
     </section>
 
-    <section class="rsud-section doctors-area three-colum bottom-less">
+    <section class="rsud-block doctors-area three-colum bottom-less">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
@@ -195,7 +195,7 @@
                 </div>
             </div>
             @if ($featuredDokters->isNotEmpty())
-                <div class="text-center rsud-section__cta">
+                <div class="text-center rsud-block__cta">
                     <a class="btn btn-md btn-gradient" href="{{ route('public.dokter.index') }}">Semua Dokter</a>
                 </div>
             @endif
@@ -203,7 +203,7 @@
     </section>
 
     @if ($layanans->isNotEmpty())
-        <section class="rsud-section bg-gray">
+        <section class="rsud-block rsud-block--muted">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-md-10">
@@ -224,7 +224,7 @@
                         </div>
                     @endforeach
                 </div>
-                <div class="text-center rsud-section__cta">
+                <div class="text-center rsud-block__cta">
                     <a class="btn btn-md btn-gradient" href="{{ route('public.layanan.index') }}">Semua Layanan</a>
                 </div>
             </div>

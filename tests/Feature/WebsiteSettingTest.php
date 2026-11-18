@@ -196,7 +196,7 @@ class WebsiteSettingTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertSee('bootcarousel', false);
+        $response->assertSee('rsudCarousel', false);
         $response->assertSee('Selamat Datang');
         $response->assertSee('data-interval="6000"', false);
     }
