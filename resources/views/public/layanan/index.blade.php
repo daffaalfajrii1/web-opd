@@ -8,16 +8,16 @@
         'breadcrumbs' => [['label' => 'Layanan']],
     ])
 
-    <section>
+    <section class="rsud-strip rsud-strip--soft">
         <div class="container">
-            <div class="row g-4">
+            <div class="row">
                 @forelse ($layanans as $index => $layanan)
-                    <div class="col-lg-4 col-md-6">
-                        @include('public.partials.optilux.layanan-card', ['layanan' => $layanan, 'index' => $index])
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        @include('public.partials.clinicom.layanan-card', ['layanan' => $layanan, 'index' => $index])
                     </div>
                 @empty
                     <div class="col-12">
-                        <div class="bg-light p-5 rounded-1 text-center">
+                        <div class="rsud-empty">
                             <p class="mb-0">Belum ada layanan publik yang aktif.</p>
                         </div>
                     </div>
@@ -26,14 +26,17 @@
         </div>
     </section>
 
-    <section class="bg-color relative text-light pt-50 pb-50">
-        <div class="container relative z-2">
-            <div class="row g-4 align-items-center">
-                <div class="col-md-9">
-                    <h3 class="mb-0 fs-32">Sudah mengajukan layanan? Cek status pengajuan Anda.</h3>
+    <section class="rsud-strip rsud-strip--teal rsud-status-cta">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                    <p class="rsud-kicker rsud-kicker--light mb-2">Lacak Pengajuan</p>
+                    <h2 class="rsud-title rsud-title--light mb-0">Sudah mengajukan layanan? Cek status pengajuan Anda.</h2>
                 </div>
-                <div class="col-lg-3 text-lg-end">
-                    <a class="btn-main btn-line fx-slide" href="{{ route('public.layanan.check-status') }}"><span>Cek Status</span></a>
+                <div class="col-lg-4 text-lg-right">
+                    <a class="btn rsud-btn-solid-light btn-block" href="{{ route('public.layanan.check-status') }}">
+                        Cek Status
+                    </a>
                 </div>
             </div>
         </div>

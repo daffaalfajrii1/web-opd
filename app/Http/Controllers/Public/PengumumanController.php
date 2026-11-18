@@ -12,6 +12,7 @@ class PengumumanController extends Controller
     {
         $pengumumans = Pengumuman::query()
             ->published()
+            ->withCount('attachments')
             ->where(function ($query) {
                 $query->whereNull('valid_until')
                     ->orWhere('valid_until', '>=', now()->toDateString());
@@ -35,6 +36,18 @@ class PengumumanController extends Controller
             abort(404);
         }
 
-        return view('public.pengumuman.show', compact('pengumuman'));
+        $relatedPengumumans = Pengumuman::query()
+            ->published()
+            ->where('id', '!=', $pengumuman->id)
+            ->where(function ($query) {
+                $query->whereNull('valid_until')
+                    ->orWhere('valid_until', '>=', now()->toDateString());
+            })
+            ->orderByDesc('is_featured')
+            ->orderByDesc('published_at')
+            ->limit(4)
+            ->get();
+
+        return view('public.pengumuman.show', compact('pengumuman', 'relatedPengumumans'));
     }
 }

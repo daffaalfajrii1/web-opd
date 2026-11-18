@@ -11,15 +11,21 @@
         ],
     ])
 
-    <section>
+    <section class="rsud-strip rsud-strip--soft rsud-article-list">
         <div class="container">
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-6">
-                    <div class="bg-light p-4 rounded-1">
-                        <h4 class="mb-3">Masukkan Nomor Registrasi</h4>
+            <div class="row justify-content-center">
+                <div class="col-lg-6 mb-4">
+                    <div class="rsud-status-card">
+                        <div class="rsud-status-card__head">
+                            <div class="rsud-status-card__icon" aria-hidden="true"><i class="fas fa-search"></i></div>
+                            <div>
+                                <h3>Masukkan Nomor Registrasi</h3>
+                                <p>Gunakan nomor yang diterima saat mengajukan layanan.</p>
+                            </div>
+                        </div>
                         <form method="post" action="{{ route('public.layanan.lookup-status') }}">
                             @csrf
-                            <div class="field-set mb-3">
+                            <div class="form-group mb-3">
                                 <input
                                     type="text"
                                     name="nomor"
@@ -29,10 +35,10 @@
                                     required
                                 >
                                 @error('nomor')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <button type="submit" class="btn-main w-100"><span>Cek Status</span></button>
+                            <button type="submit" class="btn btn-gradient btn-block">Cek Status</button>
                         </form>
                     </div>
                 </div>
@@ -40,73 +46,79 @@
                 @if (request()->filled('nomor'))
                     <div class="col-lg-8">
                         @if ($pengajuan)
-                            <div class="bg-white p-4 rounded-1 shadow-soft">
-                                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-                                    <div>
-                                        <h4 class="mb-1">{{ $pengajuan->layanan->title }}</h4>
-                                        <div class="text-muted">{{ $pengajuan->registration_number }}</div>
-                                    </div>
-                                    <span @class([
-                                        'kecamatan-status-badge',
-                                        'kecamatan-status-badge--pending' => $pengajuan->status === \App\Models\LayananPengajuan::STATUS_PENDING,
-                                        'kecamatan-status-badge--processing' => $pengajuan->status === \App\Models\LayananPengajuan::STATUS_PROCESSING,
-                                        'kecamatan-status-badge--completed' => $pengajuan->status === \App\Models\LayananPengajuan::STATUS_COMPLETED,
-                                        'kecamatan-status-badge--rejected' => $pengajuan->status === \App\Models\LayananPengajuan::STATUS_REJECTED,
-                                    ])>{{ $pengajuan->statusLabel() }}</span>
-                                </div>
-
-                                <div class="row g-3 mb-4">
-                                    <div class="col-md-6">
-                                        <strong>Tanggal Pengajuan</strong><br>
-                                        {{ $pengajuan->submitted_at?->translatedFormat('d F Y H:i') ?? '—' }}
-                                    </div>
-                                    @if ($pengajuan->processed_at)
-                                        <div class="col-md-6">
-                                            <strong>Terakhir Diproses</strong><br>
-                                            {{ $pengajuan->processed_at->translatedFormat('d F Y H:i') }}
+                            <div class="rsud-article__card rsud-status-result">
+                                <div class="rsud-article__body">
+                                    <div class="rsud-status-result__head">
+                                        <div>
+                                            <small class="text-muted">{{ $pengajuan->registration_number }}</small>
+                                            <h3 class="mb-0">{{ $pengajuan->layanan->title }}</h3>
                                         </div>
-                                    @endif
-                                </div>
+                                        <span @class([
+                                            'rsud-status-badge',
+                                            'rsud-status-badge--pending' => $pengajuan->status === \App\Models\LayananPengajuan::STATUS_PENDING,
+                                            'rsud-status-badge--processing' => $pengajuan->status === \App\Models\LayananPengajuan::STATUS_PROCESSING,
+                                            'rsud-status-badge--completed' => $pengajuan->status === \App\Models\LayananPengajuan::STATUS_COMPLETED,
+                                            'rsud-status-badge--rejected' => $pengajuan->status === \App\Models\LayananPengajuan::STATUS_REJECTED,
+                                        ])>{{ $pengajuan->statusLabel() }}</span>
+                                    </div>
 
-                                <h5 class="mb-3">Data Pengajuan</h5>
-                                <div class="table-responsive mb-4">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            @foreach ($pengajuan->layanan->fields as $field)
-                                                <tr>
-                                                    <th style="width:35%">{{ $field->name }}</th>
-                                                    <td>
-                                                        @if ($field->isFileType() && $pengajuan->fileUrl($field->field_key))
-                                                            <a href="{{ $pengajuan->fileUrl($field->field_key) }}" target="_blank" rel="noopener">Lihat file</a>
-                                                        @else
-                                                            {{ $pengajuan->displayValueForField($field) }}
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                @if ($pengajuan->status === \App\Models\LayananPengajuan::STATUS_COMPLETED)
-                                    <div class="alert alert-success">
-                                        <strong>Penyelesaian:</strong> {{ $pengajuan->completionMethodLabel() }}
-                                        @if ($pengajuan->completion_message)
-                                            <div class="mt-2">{{ $pengajuan->completion_message }}</div>
-                                        @endif
-                                        @if ($pengajuan->hasUploadedResult())
-                                            <div class="mt-3">
-                                                <a href="{{ $pengajuan->resultFileUrl() }}" class="btn-main fx-slide" target="_blank" rel="noopener">
-                                                    <span>Unduh Hasil Layanan</span>
-                                                </a>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 mb-3 mb-md-0">
+                                            <div class="rsud-status-meta">
+                                                <span>Tanggal Pengajuan</span>
+                                                <strong>{{ $pengajuan->submitted_at?->translatedFormat('d F Y H:i') ?? '—' }}</strong>
+                                            </div>
+                                        </div>
+                                        @if ($pengajuan->processed_at)
+                                            <div class="col-md-6">
+                                                <div class="rsud-status-meta">
+                                                    <span>Terakhir Diproses</span>
+                                                    <strong>{{ $pengajuan->processed_at->translatedFormat('d F Y H:i') }}</strong>
+                                                </div>
                                             </div>
                                         @endif
                                     </div>
-                                @elseif ($pengajuan->status === \App\Models\LayananPengajuan::STATUS_REJECTED)
-                                    <div class="alert alert-danger">
-                                        Pengajuan ditolak. Silakan hubungi kantor untuk informasi lebih lanjut.
+
+                                    <h4 class="rsud-status-result__subtitle">Data Pengajuan</h4>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table rsud-status-table">
+                                            <tbody>
+                                                @foreach ($pengajuan->layanan->fields as $field)
+                                                    <tr>
+                                                        <th>{{ $field->name }}</th>
+                                                        <td>
+                                                            @if ($field->isFileType() && $pengajuan->fileUrl($field->field_key))
+                                                                <a href="{{ $pengajuan->fileUrl($field->field_key) }}" target="_blank" rel="noopener">Lihat file</a>
+                                                            @else
+                                                                {{ $pengajuan->displayValueForField($field) }}
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
-                                @endif
+
+                                    @if ($pengajuan->status === \App\Models\LayananPengajuan::STATUS_COMPLETED)
+                                        <div class="alert alert-success mb-0">
+                                            <strong>Penyelesaian:</strong> {{ $pengajuan->completionMethodLabel() }}
+                                            @if ($pengajuan->completion_message)
+                                                <div class="mt-2">{{ $pengajuan->completion_message }}</div>
+                                            @endif
+                                            @if ($pengajuan->hasUploadedResult())
+                                                <div class="mt-3">
+                                                    <a href="{{ $pengajuan->resultFileUrl() }}" class="btn btn-gradient btn-sm" target="_blank" rel="noopener">
+                                                        Unduh Hasil Layanan
+                                                    </a>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @elseif ($pengajuan->status === \App\Models\LayananPengajuan::STATUS_REJECTED)
+                                        <div class="alert alert-danger mb-0">
+                                            Pengajuan ditolak. Silakan hubungi kantor untuk informasi lebih lanjut.
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         @else
                             <div class="alert alert-warning mb-0">

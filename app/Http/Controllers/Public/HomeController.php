@@ -33,6 +33,7 @@ class HomeController extends Controller
 
         $latestPengumumans = Pengumuman::query()
             ->published()
+            ->withCount('attachments')
             ->where(function ($query) {
                 $query->whereNull('valid_until')
                     ->orWhere('valid_until', '>=', now()->toDateString());

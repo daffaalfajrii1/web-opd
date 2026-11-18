@@ -89,15 +89,7 @@
             <div class="row">
                 @forelse ($latestPengumumans as $pengumuman)
                     <div class="col-lg-4 col-md-6 mb-4">
-                        <article class="rsud-panel">
-                            @if ($pengumuman->is_featured)
-                                <span class="rsud-panel__tag">Unggulan</span>
-                            @endif
-                            <small>{{ optional($pengumuman->published_at)->translatedFormat('d F Y') }}</small>
-                            <h3><a href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">{{ $pengumuman->title }}</a></h3>
-                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($pengumuman->excerpt ?: $pengumuman->content), 100) }}</p>
-                            <a class="rsud-panel__link" href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">Baca pengumuman</a>
-                        </article>
+                        @include('public.partials.clinicom.pengumuman-card', ['pengumuman' => $pengumuman])
                     </div>
                 @empty
                     <div class="col-12"><p class="text-muted mb-0 text-center">Belum ada pengumuman aktif.</p></div>
@@ -169,13 +161,9 @@
                     <a class="btn rsud-btn-outline" href="{{ route('public.layanan.index') }}">Semua Layanan</a>
                 </div>
                 <div class="row">
-                    @foreach ($layanans as $layanan)
+                    @foreach ($layanans as $index => $layanan)
                         <div class="col-lg-4 col-md-6 mb-4">
-                            <article class="rsud-panel">
-                                <h3><a href="{{ route('public.layanan.show', $layanan->slug) }}">{{ $layanan->title }}</a></h3>
-                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($layanan->description ?? ''), 100) ?: 'Ajukan layanan secara online.' }}</p>
-                                <a class="rsud-panel__link" href="{{ route('public.layanan.show', $layanan->slug) }}">Ajukan sekarang</a>
-                            </article>
+                            @include('public.partials.clinicom.layanan-card', ['layanan' => $layanan, 'index' => $index])
                         </div>
                     @endforeach
                 </div>
