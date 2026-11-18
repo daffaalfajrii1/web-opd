@@ -87,25 +87,41 @@
 
 @push('scripts')
 <script>
-    document.getElementById('deleteNavMenuModal')?.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        if (!button) return;
+    (function () {
+        const modalEl = document.getElementById('deleteNavMenuModal');
+        if (!modalEl) return;
 
-        const action = button.getAttribute('data-action');
-        const title = button.getAttribute('data-title') || 'menu ini';
-        const count = Number(button.getAttribute('data-count') || 0);
-
-        document.getElementById('deleteNavMenuForm').setAttribute('action', action);
-        document.getElementById('deleteNavMenuTitle').textContent = title;
-
-        const warn = document.getElementById('deleteNavMenuWarn');
-        if (count > 0) {
-            warn.textContent = `Menu ini punya ${count} sub-menu. Semua sub-menu tersebut juga akan ikut terhapus.`;
-            warn.classList.remove('d-none');
-        } else {
-            warn.textContent = 'Menu ini tidak punya sub-menu.';
-            warn.classList.remove('text-danger');
+        // Pindahkan modal ke <body> agar tidak ikut efek filter parent
+        if (modalEl.parentElement !== document.body) {
+            document.body.appendChild(modalEl);
         }
-    });
+
+        modalEl.addEventListener('show.bs.modal', function (event) {
+            document.body.classList.add('modal-open');
+            document.querySelectorAll('.nxl-header, .nxl-navigation, .nxl-container, .page-header').forEach(function (el) {
+                el.style.filter = 'none';
+                el.style.webkitFilter = 'none';
+            });
+
+            const button = event.relatedTarget;
+            if (!button) return;
+
+            const action = button.getAttribute('data-action');
+            const title = button.getAttribute('data-title') || 'menu ini';
+            const count = Number(button.getAttribute('data-count') || 0);
+
+            document.getElementById('deleteNavMenuForm').setAttribute('action', action);
+            document.getElementById('deleteNavMenuTitle').textContent = title;
+
+            const warn = document.getElementById('deleteNavMenuWarn');
+            if (count > 0) {
+                warn.textContent = 'Menu ini punya ' + count + ' sub-menu. Semua sub-menu tersebut juga akan ikut terhapus.';
+                warn.classList.add('text-danger');
+            } else {
+                warn.textContent = 'Menu ini tidak punya sub-menu.';
+                warn.classList.remove('text-danger');
+            }
+        });
+    })();
 </script>
 @endpush

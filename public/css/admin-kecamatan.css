@@ -960,7 +960,28 @@ html:not(.minimenu) .nxl-navigation .m-header .kecamatan-panel-brand__logo-wrap 
 /* Modal harus tajam: tema Duralux blur .nxl-container, padahal modal ada di dalamnya */
 body.modal-open .nxl-header,
 body.modal-open .nxl-navigation,
+body.modal-open .nxl-container,
+body.modal-open .nxl-content,
 body.modal-open .page-header,
-body.modal-open .nxl-container {
+body.modal-open .main-content,
+body.modal-open .kecamatan-panel-container,
+body.modal-open .kecamatan-panel-body,
+html body.modal-open .nxl-container,
+html body.modal-open .nxl-navigation,
+html body.modal-open .nxl-header {
     filter: none !important;
+    -webkit-filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+.modal,
+.modal.show,
+.modal-dialog,
+.modal-content,
+.modal-backdrop,
+.modal-backdrop.show {
+    filter: none !important;
+    -webkit-filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }

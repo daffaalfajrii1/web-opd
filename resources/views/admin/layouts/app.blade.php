@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="{{ $duralux }}/css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{ $duralux }}/vendors/css/vendors.min.css" />
     @stack('styles')
-    <link rel="stylesheet" href="{{ $duralux }}/css/theme.min.css" />
-    <link rel="stylesheet" href="{{ asset('css/admin-kecamatan.css') }}" />
+    <link rel="stylesheet" href="{{ $duralux }}/css/theme.min.css?v={{ @filemtime(public_path('duralux/assets/css/theme.min.css')) ?: time() }}" />
+    <link rel="stylesheet" href="{{ asset('css/admin-kecamatan.css') }}?v={{ @filemtime(public_path('css/admin-kecamatan.css')) ?: time() }}" />
     @include('partials.theme-vars')
 </head>
 <body class="kecamatan-panel-body">

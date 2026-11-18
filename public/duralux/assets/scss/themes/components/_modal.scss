@@ -8,7 +8,8 @@ body.modal-open {
 	.nxl-navigation,
 	.page-header,
 	.nxl-container {
-		filter: blur(3px);
+		/* Jangan blur: modal Bootstrap ada di dalam .nxl-container jadi ikut buram */
+		filter: none;
 		transition: all 0.2s linear;
 	}
 }
