@@ -104,7 +104,7 @@
                                     </div>
                                 @elseif ($pengajuan->status === \App\Models\LayananPengajuan::STATUS_REJECTED)
                                     <div class="alert alert-danger">
-                                        Pengajuan ditolak. Silakan hubungi kantor kecamatan untuk informasi lebih lanjut.
+                                        Pengajuan ditolak. Silakan hubungi kantor untuk informasi lebih lanjut.
                                     </div>
                                 @endif
                             </div>
