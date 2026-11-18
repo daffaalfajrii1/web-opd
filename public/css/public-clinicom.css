@@ -640,15 +640,25 @@ main .breadcrumb-area + *,
     position: relative;
 }
 
-.rsud-related-item__thumb img,
-.rsud-related-item__thumb .rsud-berita-card__fallback {
+.rsud-related-item__thumb img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+}
+.rsud-related-item__thumb .rsud-berita-card__fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    background: linear-gradient(135deg, #0b3d4a, #1a7a8c);
 }
 
 .rsud-related-item strong {
@@ -760,4 +770,291 @@ body .doctors-area.default-padding,
 body .blog-area.default-padding {
     padding-top: 4.5rem;
     padding-bottom: 4.5rem;
+}
+
+/* ========== v2 strips + compact news (override) ========== */
+.rsud-strip { padding: 3.75rem 0; width: 100%; }
+.rsud-strip--teal {
+  background: linear-gradient(135deg, var(--theme-dark, #003d47), var(--theme-primary, #0b3d4a) 55%, var(--theme-light, #1a7a8c));
+  padding: 1.75rem 0;
+}
+.rsud-strip--white { background: #fff; }
+.rsud-strip--soft { background: #eef5f7; }
+.rsud-strip--mint { background: #e4f3f4; }
+.rsud-strip--dark,
+.rsud-strip--news {
+  background: linear-gradient(160deg, #0b1f2c 0%, #123647 48%, #0b3d4a 100%);
+  color: #fff;
+  padding: 4.25rem 0;
+}
+.rsud-strip--news {
+  background: #0f2744;
+}
+
+.rsud-strip__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.rsud-kicker {
+  margin: 0 0 0.4rem;
+  color: var(--theme-primary, #0b3d4a);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-size: .82rem;
+}
+.rsud-kicker--light { color: #7ed7d4 !important; }
+
+.rsud-title {
+  margin: 0;
+  font-size: clamp(1.55rem, 2.4vw, 2.1rem);
+  font-weight: 700;
+  color: #12363f;
+  line-height: 1.25;
+}
+.rsud-title--light { color: #fff !important; }
+
+.rsud-search-bar .form-control {
+  height: 48px;
+  border: 0;
+  border-radius: 10px;
+}
+.rsud-btn-solid-light {
+  height: 48px;
+  background: #fff !important;
+  color: #0b3d4a !important;
+  border: 0 !important;
+  font-weight: 700;
+}
+.rsud-btn-solid-light:hover { background: #f0f7f8 !important; color: #003d47 !important; }
+
+body a.btn.rsud-btn-outline,
+body .btn.rsud-btn-outline,
+.rsud-btn-outline,
+a.rsud-btn-outline,
+.btn.rsud-btn-outline,
+.doctors-area a.btn.rsud-btn-outline,
+.rsud-filter-bar a.btn.rsud-btn-outline,
+.rsud-actions a.btn.rsud-btn-outline {
+  background: #fff !important;
+  color: #0b3d4a !important;
+  border: 2px solid #0b3d4a !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+body a.btn.rsud-btn-outline:hover,
+body .btn.rsud-btn-outline:hover,
+.rsud-btn-outline:hover,
+a.rsud-btn-outline:hover {
+  background: #0b3d4a !important;
+  color: #fff !important;
+  border-color: #0b3d4a !important;
+}
+
+.rsud-btn-outline-light,
+a.rsud-btn-outline-light {
+  background: transparent !important;
+  color: #fff !important;
+  border: 2px solid rgba(255,255,255,.75) !important;
+  font-weight: 700 !important;
+}
+.rsud-btn-outline-light:hover { background: #fff !important; color: #0b3d4a !important; }
+
+.rsud-stat {
+  background: #f4fafb;
+  border: 1px solid #dce8eb;
+  border-radius: 14px;
+  padding: 1.4rem 1rem;
+  text-align: center;
+}
+.rsud-stat strong {
+  display: block;
+  font-size: 2rem;
+  color: #0b3d4a;
+  line-height: 1.1;
+}
+.rsud-stat span { color: #607078; font-size: .92rem; }
+
+/* Compact news cards — kecil & seragam 16:9 */
+.rsud-news-card {
+  display: block;
+  height: 100%;
+  background: transparent;
+  min-width: 0;
+}
+.rsud-strip--dark .rsud-news-card__title a { color: #fff !important; }
+.rsud-strip--soft .rsud-news-card__title a,
+.rsud-strip--white .rsud-news-card__title a,
+.rsud-article-list .rsud-news-card__title a { color: #12363f !important; }
+
+.rsud-news-card__media {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto !important;
+  max-height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a3a45;
+  margin-bottom: .85rem;
+}
+.rsud-news-card__media img {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+  border-radius: 0 !important;
+}
+.rsud-news-card__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.7);
+  font-size: 1.4rem;
+  background: linear-gradient(135deg, #0b3d4a, #1a7a8c);
+}
+.rsud-news-card__badge {
+  position: absolute;
+  left: .65rem;
+  top: .65rem;
+  background: #1e88e5;
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 700;
+  padding: .2rem .5rem;
+  border-radius: .35rem;
+  max-width: calc(100% - 1.3rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rsud-news-card__meta {
+  color: #8aa0a8;
+  font-size: .8rem;
+  margin-bottom: .35rem;
+}
+.rsud-strip--dark .rsud-news-card__meta { color: rgba(255,255,255,.65); }
+.rsud-news-card__title {
+  margin: 0;
+  font-size: .98rem;
+  line-height: 1.35;
+  font-weight: 700;
+}
+.rsud-news-card__title a { text-decoration: none; }
+
+.rsud-panel {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.35rem 1.4rem;
+  height: 100%;
+  border-left: 4px solid var(--theme-primary, #0b3d4a);
+  box-shadow: 0 10px 28px rgba(11,61,74,.07);
+}
+.rsud-panel small { color: #7a8a92; display: block; margin-bottom: .4rem; }
+.rsud-panel h3 { font-size: 1.05rem; margin: 0 0 .55rem; line-height: 1.35; }
+.rsud-panel h3 a { color: #12363f; text-decoration: none; }
+.rsud-panel p { color: #5b6b73; margin-bottom: .85rem; }
+.rsud-panel__tag {
+  display: inline-block;
+  background: #0b3d4a;
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 700;
+  padding: .15rem .45rem;
+  border-radius: 999px;
+  margin-bottom: .45rem;
+}
+.rsud-panel__link { font-weight: 700; color: #0b3d4a !important; }
+
+.rsud-agenda {
+  background: #fff;
+  border: 1px solid #e5eef1;
+  border-radius: 14px;
+  padding: 1.25rem 1.35rem;
+  height: 100%;
+}
+.rsud-agenda__date {
+  display: inline-block;
+  background: #e8f6f6;
+  color: #0b3d4a;
+  font-weight: 700;
+  font-size: .82rem;
+  padding: .35rem .65rem;
+  border-radius: 999px;
+  margin-bottom: .75rem;
+}
+.rsud-agenda h3 { font-size: 1.05rem; margin: 0 0 .45rem; }
+.rsud-agenda h3 a { color: #12363f; text-decoration: none; }
+.rsud-agenda p { color: #5b6b73; margin: 0; }
+
+.rsud-doc {
+  display: block;
+  text-align: center;
+  text-decoration: none !important;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.35rem 1rem;
+  height: 100%;
+  box-shadow: 0 10px 28px rgba(11,61,74,.08);
+}
+.rsud-doc img {
+  width: 120px !important;
+  height: 120px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  margin: 0 auto .85rem;
+  display: block;
+}
+.rsud-doc h3 { color: #12363f; font-size: 1rem; margin: 0 0 .35rem; }
+.rsud-doc span { color: var(--theme-primary, #0cb8b6); font-weight: 700; font-size: .85rem; }
+
+/* Berita list: compact card di atas soft bg */
+.rsud-article-list .rsud-news-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: .85rem;
+  box-shadow: 0 8px 24px rgba(11,61,74,.07);
+  border: 1px solid #e8eef0;
+}
+.rsud-article-list .rsud-news-card__media {
+  max-height: 140px;
+}
+
+/* Paksa tombol clinicom yang putih-on-putih */
+body .doctors-area a.btn.btn-light.border,
+body a.btn.btn-light.border,
+body a.btn.btn-border.light,
+body .rsud-actions a.btn.btn-border,
+body .rsud-filter-bar a.btn.border {
+  color: #0b3d4a !important;
+  background: #fff !important;
+  border: 2px solid #0b3d4a !important;
+}
+
+/* Section strip spacing */
+.rsud-strip--white { padding-top: 3.25rem; padding-bottom: 3.25rem; }
+.rsud-strip--teal + .rsud-strip--white { padding-top: 3.5rem; }
+.rsud-filter-bar .form-control { height: 48px; }
+.rsud-filter-bar .btn { height: 48px; display: inline-flex; align-items: center; justify-content: center; }
+
+@media (max-width: 767.98px) {
+  .rsud-news-card__media,
+  .rsud-article-list .rsud-news-card__media {
+    max-height: 160px;
+  }
+  .rsud-strip__head { align-items: flex-start; }
 }

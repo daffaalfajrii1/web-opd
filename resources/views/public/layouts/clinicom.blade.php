@@ -18,7 +18,7 @@
     <link href="{{ asset('clinicom/assets/css/bootsnav.css') }}" rel="stylesheet">
     <link href="{{ asset('clinicom/style.css') }}" rel="stylesheet">
     <link href="{{ asset('clinicom/assets/css/responsive.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/public-clinicom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/public-clinicom.css') }}?v={{ @filemtime(public_path('css/public-clinicom.css')) ?: time() }}" rel="stylesheet">
     @include('partials.theme-vars')
     @stack('styles')
 </head>

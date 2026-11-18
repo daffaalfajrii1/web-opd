@@ -5,47 +5,45 @@
 @section('content')
     @include('public.partials.clinicom.carousel')
 
-    <section class="rsud-block rsud-block--search">
+    {{-- Strip cari dokter --}}
+    <section class="rsud-strip rsud-strip--teal">
         <div class="container">
-            <div class="rsud-doctor-search">
-                <form method="get" action="{{ route('public.dokter.index') }}" class="row align-items-center">
-                    <div class="col-md-8 col-sm-12 mb-2 mb-md-0">
-                        <input type="search" name="q" class="form-control" placeholder="Cari dokter / spesialisasi..." value="{{ request('q') }}">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <button type="submit" class="btn btn-gradient btn-md btn-block">Cari Dokter</button>
-                    </div>
-                </form>
-            </div>
+            <form method="get" action="{{ route('public.dokter.index') }}" class="rsud-search-bar row align-items-center">
+                <div class="col-md-8 mb-2 mb-md-0">
+                    <input type="search" name="q" class="form-control" placeholder="Cari dokter / spesialisasi..." value="{{ request('q') }}">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-light btn-block rsud-btn-solid-light">Cari Dokter</button>
+                </div>
+            </form>
         </div>
     </section>
 
-    <section class="rsud-block rsud-block--portal">
+    {{-- Portal resmi --}}
+    <section class="rsud-strip rsud-strip--white">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-7 mb-4 mb-lg-0">
-                    <div class="site-heading text-left rsud-portal-heading">
-                        <h4>Portal Resmi</h4>
-                        <h2>{{ $websiteSettings->siteName() }}</h2>
-                    </div>
+                    <p class="rsud-kicker">Portal Resmi</p>
+                    <h2 class="rsud-title">{{ $websiteSettings->siteName() }}</h2>
                     <p class="rsud-lead">{{ $websiteSettings->site_tagline ?: 'Sumber informasi, layanan, dan transparansi '.$websiteSettings->siteName().'.' }}</p>
                     <div class="rsud-actions">
-                        <a class="btn btn-md btn-gradient" href="{{ route('public.layanan.index') }}">Layanan Online</a>
-                        <a class="btn btn-md btn-border light" href="{{ route('public.dokter.jadwal') }}">Jadwal Dokter</a>
+                        <a class="btn btn-gradient" href="{{ route('public.layanan.index') }}">Layanan Online</a>
+                        <a class="btn rsud-btn-outline" href="{{ route('public.dokter.jadwal') }}">Jadwal Dokter</a>
                     </div>
                 </div>
                 <div class="col-lg-5">
-                    <div class="row text-center rsud-stats">
+                    <div class="row">
                         <div class="col-6">
-                            <div class="rsud-stat-card">
-                                <h2>{{ $totalPegawai }}</h2>
-                                <p>Pegawai</p>
+                            <div class="rsud-stat">
+                                <strong>{{ $totalPegawai }}</strong>
+                                <span>Pegawai</span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="rsud-stat-card">
-                                <h2>{{ $totalDokter }}</h2>
-                                <p>Dokter</p>
+                            <div class="rsud-stat">
+                                <strong>{{ $totalDokter }}</strong>
+                                <span>Dokter</span>
                             </div>
                         </div>
                     </div>
@@ -54,178 +52,132 @@
         </div>
     </section>
 
-    <section class="rsud-block rsud-block--muted">
+    {{-- Berita: section gelap seperti referensi --}}
+    <section class="rsud-strip rsud-strip--dark rsud-strip--news">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10">
-                    <div class="site-heading text-center">
-                        <h4>Update Terkini</h4>
-                        <h2>Berita Terbaru</h2>
-                    </div>
+            <div class="rsud-strip__head">
+                <div>
+                    <p class="rsud-kicker rsud-kicker--light">Update Terkini</p>
+                    <h2 class="rsud-title rsud-title--light">Berita Terbaru</h2>
                 </div>
+                <a class="btn rsud-btn-outline-light" href="{{ route('public.berita.index') }}">Semua Berita</a>
             </div>
-            <div class="row rsud-gap justify-content-center">
+            <div class="row">
                 @forelse ($latestBeritas as $berita)
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-3 col-md-6 mb-4">
                         @include('public.partials.clinicom.berita-card', ['berita' => $berita])
                     </div>
                 @empty
                     <div class="col-12">
-                        <p class="text-center text-muted mb-0">Belum ada berita terbaru.</p>
+                        <p class="text-center text-white-50 mb-0">Belum ada berita terbaru.</p>
                     </div>
                 @endforelse
             </div>
-            @if ($latestBeritas->isNotEmpty())
-                <div class="text-center rsud-block__cta">
-                    <a class="btn btn-md btn-gradient" href="{{ route('public.berita.index') }}">Semua Berita</a>
-                </div>
-            @endif
         </div>
     </section>
 
-    <section class="rsud-block">
+    {{-- Pengumuman --}}
+    <section class="rsud-strip rsud-strip--soft">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10">
-                    <div class="site-heading text-center">
-                        <h4>Publikasi</h4>
-                        <h2>Pengumuman</h2>
-                    </div>
+            <div class="rsud-strip__head">
+                <div>
+                    <p class="rsud-kicker">Publikasi</p>
+                    <h2 class="rsud-title">Pengumuman</h2>
                 </div>
+                <a class="btn rsud-btn-outline" href="{{ route('public.pengumuman.index') }}">Semua Pengumuman</a>
             </div>
-            <div class="row rsud-gap justify-content-center">
+            <div class="row">
                 @forelse ($latestPengumumans as $pengumuman)
-                    <div class="col-lg-4 col-md-6">
-                        <article class="rsud-card">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <article class="rsud-panel">
                             @if ($pengumuman->is_featured)
-                                <span class="rsud-card__badge">Unggulan</span>
+                                <span class="rsud-panel__tag">Unggulan</span>
                             @endif
-                            <small class="rsud-card__meta">{{ optional($pengumuman->published_at)->translatedFormat('d F Y') }}</small>
-                            <h4><a href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">{{ $pengumuman->title }}</a></h4>
-                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($pengumuman->excerpt ?: $pengumuman->content), 110) }}</p>
-                            <a class="rsud-card__link" href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">Baca pengumuman</a>
+                            <small>{{ optional($pengumuman->published_at)->translatedFormat('d F Y') }}</small>
+                            <h3><a href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">{{ $pengumuman->title }}</a></h3>
+                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($pengumuman->excerpt ?: $pengumuman->content), 100) }}</p>
+                            <a class="rsud-panel__link" href="{{ route('public.pengumuman.show', $pengumuman->slug) }}">Baca pengumuman</a>
                         </article>
                     </div>
                 @empty
-                    <div class="col-12">
-                        <p class="text-center text-muted mb-0">Belum ada pengumuman aktif.</p>
-                    </div>
+                    <div class="col-12"><p class="text-muted mb-0 text-center">Belum ada pengumuman aktif.</p></div>
                 @endforelse
             </div>
-            @if ($latestPengumumans->isNotEmpty())
-                <div class="text-center rsud-block__cta">
-                    <a class="btn btn-md btn-gradient" href="{{ route('public.pengumuman.index') }}">Semua Pengumuman</a>
-                </div>
-            @endif
         </div>
     </section>
 
-    <section class="rsud-block rsud-block--muted">
+    {{-- Agenda --}}
+    <section class="rsud-strip rsud-strip--white">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10">
-                    <div class="site-heading text-center">
-                        <h4>Kalender</h4>
-                        <h2>Agenda Mendatang</h2>
-                    </div>
+            <div class="rsud-strip__head">
+                <div>
+                    <p class="rsud-kicker">Kalender</p>
+                    <h2 class="rsud-title">Agenda Mendatang</h2>
                 </div>
+                <a class="btn rsud-btn-outline" href="{{ route('public.agenda.index') }}">Semua Agenda</a>
             </div>
-            <div class="row rsud-gap justify-content-center">
+            <div class="row">
                 @forelse ($upcomingAgendas as $agenda)
-                    <div class="col-lg-4 col-md-6">
-                        <article class="rsud-card">
-                            <small class="rsud-card__meta">{{ $agenda->formattedEventDate() }}</small>
-                            <h4><a href="{{ route('public.agenda.show', $agenda->slug) }}">{{ $agenda->title }}</a></h4>
-                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($agenda->excerpt ?: $agenda->description ?? ''), 100) ?: ($agenda->locationDisplay() ?? 'Agenda kegiatan') }}</p>
-                            <a class="rsud-card__link" href="{{ route('public.agenda.show', $agenda->slug) }}">Detail agenda</a>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <article class="rsud-agenda">
+                            <div class="rsud-agenda__date">{{ $agenda->formattedEventDate() }}</div>
+                            <h3><a href="{{ route('public.agenda.show', $agenda->slug) }}">{{ $agenda->title }}</a></h3>
+                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($agenda->excerpt ?: $agenda->description ?? ''), 90) ?: ($agenda->locationDisplay() ?? 'Agenda kegiatan') }}</p>
                         </article>
                     </div>
                 @empty
-                    <div class="col-12">
-                        <p class="text-center text-muted mb-0">Belum ada agenda mendatang.</p>
-                    </div>
+                    <div class="col-12"><p class="text-muted mb-0 text-center">Belum ada agenda mendatang.</p></div>
                 @endforelse
             </div>
-            @if ($upcomingAgendas->isNotEmpty())
-                <div class="text-center rsud-block__cta">
-                    <a class="btn btn-md btn-gradient" href="{{ route('public.agenda.index') }}">Semua Agenda</a>
-                </div>
-            @endif
         </div>
     </section>
 
-    <section class="rsud-block doctors-area three-colum bottom-less">
+    {{-- Dokter --}}
+    <section class="rsud-strip rsud-strip--mint">
         <div class="container">
+            <div class="rsud-strip__head">
+                <div>
+                    <p class="rsud-kicker">Tenaga Medis</p>
+                    <h2 class="rsud-title">Dokter Kami</h2>
+                </div>
+                <a class="btn rsud-btn-outline" href="{{ route('public.dokter.index') }}">Semua Dokter</a>
+            </div>
             <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10">
-                    <div class="site-heading text-center">
-                        <h4>Tenaga Medis</h4>
-                        <h2>Dokter Kami</h2>
-                        <p>Klik kartu dokter untuk melihat jadwal praktik.</p>
+                @forelse ($featuredDokters as $dokter)
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <a href="{{ route('public.dokter.show', $dokter->slug) }}" class="rsud-doc">
+                            <img src="{{ $dokter->photoUrl() }}" alt="{{ $dokter->name }}">
+                            <h3>{{ $dokter->name }}</h3>
+                            <span>{{ $dokter->specialtyLabel() }}</span>
+                        </a>
                     </div>
-                </div>
+                @empty
+                    <div class="col-12"><p class="text-muted mb-0 text-center">Belum ada data dokter.</p></div>
+                @endforelse
             </div>
-            <div class="doctor-items text-center">
-                <div class="row rsud-gap justify-content-center">
-                    @forelse ($featuredDokters as $dokter)
-                        <div class="col-lg-4 col-md-6 single-item rsud-doctor-card">
-                            <div class="item">
-                                <div class="thumb">
-                                    <a href="{{ route('public.dokter.show', $dokter->slug) }}">
-                                        <img src="{{ $dokter->photoUrl() }}" alt="{{ $dokter->name }}">
-                                    </a>
-                                    <div class="button">
-                                        <a href="{{ route('public.dokter.show', $dokter->slug) }}">Lihat Jadwal</a>
-                                    </div>
-                                </div>
-                                <div class="info">
-                                    <h4><a href="{{ route('public.dokter.show', $dokter->slug) }}">{{ $dokter->name }}</a></h4>
-                                    <span>{{ $dokter->specialtyLabel() }}</span>
-                                    @if ($dokter->poli)
-                                        <small class="d-block text-muted mt-1">{{ $dokter->poli }}</small>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-12">
-                            <p class="text-center text-muted mb-0">Belum ada data dokter.</p>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-            @if ($featuredDokters->isNotEmpty())
-                <div class="text-center rsud-block__cta">
-                    <a class="btn btn-md btn-gradient" href="{{ route('public.dokter.index') }}">Semua Dokter</a>
-                </div>
-            @endif
         </div>
     </section>
 
     @if ($layanans->isNotEmpty())
-        <section class="rsud-block rsud-block--muted">
+        <section class="rsud-strip rsud-strip--white">
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 col-md-10">
-                        <div class="site-heading text-center">
-                            <h4>Pelayanan</h4>
-                            <h2>Layanan Online</h2>
-                        </div>
+                <div class="rsud-strip__head">
+                    <div>
+                        <p class="rsud-kicker">Pelayanan</p>
+                        <h2 class="rsud-title">Layanan Online</h2>
                     </div>
+                    <a class="btn rsud-btn-outline" href="{{ route('public.layanan.index') }}">Semua Layanan</a>
                 </div>
-                <div class="row rsud-gap justify-content-center">
+                <div class="row">
                     @foreach ($layanans as $layanan)
-                        <div class="col-lg-4 col-md-6">
-                            <article class="rsud-card">
-                                <h4><a href="{{ route('public.layanan.show', $layanan->slug) }}">{{ $layanan->title }}</a></h4>
-                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($layanan->description ?? ''), 110) ?: 'Ajukan layanan secara online.' }}</p>
-                                <a class="rsud-card__link" href="{{ route('public.layanan.show', $layanan->slug) }}">Ajukan sekarang</a>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <article class="rsud-panel">
+                                <h3><a href="{{ route('public.layanan.show', $layanan->slug) }}">{{ $layanan->title }}</a></h3>
+                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($layanan->description ?? ''), 100) ?: 'Ajukan layanan secara online.' }}</p>
+                                <a class="rsud-panel__link" href="{{ route('public.layanan.show', $layanan->slug) }}">Ajukan sekarang</a>
                             </article>
                         </div>
                     @endforeach
-                </div>
-                <div class="text-center rsud-block__cta">
-                    <a class="btn btn-md btn-gradient" href="{{ route('public.layanan.index') }}">Semua Layanan</a>
                 </div>
             </div>
         </section>

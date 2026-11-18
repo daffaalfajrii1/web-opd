@@ -8,7 +8,7 @@
         'breadcrumbs' => [['label' => 'Berita']],
     ])
 
-    <section class="rsud-block rsud-article-list">
+    <section class="rsud-strip rsud-strip--soft rsud-article-list">
         <div class="container">
             <form method="get" class="rsud-filter-bar row">
                 <div class="col-md-5 mb-3">
@@ -27,9 +27,9 @@
                 </div>
             </form>
 
-            <div class="row rsud-gap">
+            <div class="row">
                 @forelse ($beritas as $berita)
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-3 col-md-6 mb-4">
                         @include('public.partials.clinicom.berita-card', ['berita' => $berita])
                     </div>
                 @empty
@@ -42,7 +42,7 @@
             </div>
 
             @if ($beritas->hasPages())
-                <div class="text-center mt-5">
+                <div class="text-center mt-4">
                     {{ $beritas->links() }}
                 </div>
             @endif
