@@ -30,7 +30,7 @@ class LayananPengajuan extends Model
 
     public const COMPLETION_METHODS = [
         self::COMPLETION_FILE_UPLOAD => 'Upload hasil (unduh online)',
-        self::COMPLETION_OFFICE_PICKUP => 'Ambil di kantor kecamatan',
+        self::COMPLETION_OFFICE_PICKUP => 'Ambil di kantor',
     ];
 
     protected $table = 'layanan_pengajuans';
