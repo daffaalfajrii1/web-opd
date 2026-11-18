@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Dokter;
+use App\Models\DokterSpesialisasi;
 use App\Models\User;
 use App\Support\DokterDays;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,9 +38,16 @@ class DokterTest extends TestCase
 
         $user = $this->manager();
 
+        $spesialisasi = DokterSpesialisasi::create([
+            'name' => 'Spesialis Jantung',
+            'slug' => 'spesialis-jantung',
+            'is_active' => true,
+            'sort_order' => 1,
+        ]);
+
         $response = $this->actingAs($user)->post(route('admin.dokter.store'), [
             'name' => 'dr Andi Wijaya',
-            'specialty' => 'Spesialis Jantung',
+            'dokter_spesialisasi_id' => $spesialisasi->id,
             'bio' => 'Dokter spesialis jantung',
             'sort_order' => 1,
             'is_active' => '1',
@@ -70,12 +78,55 @@ class DokterTest extends TestCase
         ]);
     }
 
+    public function test_admin_must_create_spesialisasi_before_dokter_dropdown(): void
+    {
+        $user = $this->manager();
+
+        $createPage = $this->actingAs($user)->get(route('admin.dokter.create'));
+        $createPage->assertOk();
+        $createPage->assertSee('Tambah spesialisasi dulu');
+
+        $store = $this->actingAs($user)->post(route('admin.dokter.store'), [
+            'name' => 'dr Tanpa Spesialisasi',
+            'is_active' => '1',
+        ]);
+        $store->assertSessionHasErrors('dokter_spesialisasi_id');
+
+        $this->actingAs($user)->post(route('admin.dokter-spesialisasi.store'), [
+            'name' => 'Spesialis Orthopedi',
+            'sort_order' => 1,
+            'is_active' => '1',
+        ])->assertRedirect(route('admin.dokter-spesialisasi.index'));
+
+        $this->assertDatabaseHas('dokter_spesialisasis', [
+            'name' => 'Spesialis Orthopedi',
+            'slug' => 'spesialis-orthopedi',
+        ]);
+
+        $createPageAfter = $this->actingAs($user)->get(route('admin.dokter.create'));
+        $createPageAfter->assertOk();
+        $createPageAfter->assertSee('Spesialis Orthopedi');
+        $createPageAfter->assertDontSee('Tambah spesialisasi dulu');
+    }
+
     public function test_public_dokter_index_supports_search(): void
     {
+        $dalam = DokterSpesialisasi::create([
+            'name' => 'Penyakit Dalam',
+            'slug' => 'penyakit-dalam',
+            'is_active' => true,
+        ]);
+        $anak = DokterSpesialisasi::create([
+            'name' => 'Anak',
+            'slug' => 'anak',
+            'is_active' => true,
+        ]);
+
         Dokter::create([
             'name' => 'Dr. Budi',
             'slug' => 'dr-budi',
-            'specialty' => 'Penyakit Dalam',
+            'dokter_spesialisasi_id' => $dalam->id,
+            'specialty' => $dalam->name,
             'is_active' => true,
             'sort_order' => 1,
         ]);
@@ -83,7 +134,8 @@ class DokterTest extends TestCase
         Dokter::create([
             'name' => 'Dr. Citra',
             'slug' => 'dr-citra',
-            'specialty' => 'Anak',
+            'dokter_spesialisasi_id' => $anak->id,
+            'specialty' => $anak->name,
             'is_active' => true,
             'sort_order' => 2,
         ]);

@@ -26,7 +26,7 @@
                             </li>
                             <li>
                                 <h4>{{ $dokter->name }}</h4>
-                                <span>{{ $dokter->specialty }}</span>
+                                <span>{{ $dokter->specialtyLabel() }}</span>
                             </li>
                         </ul>
                     </div>

@@ -18,7 +18,7 @@
                     <select name="dokter_id" class="form-control">
                         <option value="">Semua dokter</option>
                         @foreach ($dokters as $dokterOption)
-                            <option value="{{ $dokterOption->id }}" @selected(request('dokter_id') == $dokterOption->id)>{{ $dokterOption->name }} — {{ $dokterOption->specialty }}</option>
+                            <option value="{{ $dokterOption->id }}" @selected(request('dokter_id') == $dokterOption->id)>{{ $dokterOption->name }} — {{ $dokterOption->specialtyLabel() }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -54,7 +54,7 @@
                                         <td>
                                             <a href="{{ route('public.dokter.show', $jadwal->dokter->slug) }}">{{ $jadwal->dokter->name }}</a>
                                         </td>
-                                        <td>{{ $jadwal->dokter->specialty }}</td>
+                                        <td>{{ $jadwal->dokter->specialtyLabel() }}</td>
                                         <td>{{ $jadwal->formatTimeRange() }}</td>
                                         <td>{{ $jadwal->note ?: '—' }}</td>
                                     </tr>

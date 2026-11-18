@@ -62,6 +62,7 @@ class HomeController extends Controller
         $featuredDokters = collect();
         if (Schema::hasTable('dokters')) {
             $featuredDokters = Dokter::query()
+                ->with('spesialisasi')
                 ->active()
                 ->ordered()
                 ->limit(6)

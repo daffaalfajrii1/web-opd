@@ -1,4 +1,4 @@
-<div class="breadcrumb-area gradient-bg bg-cover shadow dark text-light text-center" style="background-image: url({{ asset('clinicom/assets/img/1600x780.png') }});">
+<div class="breadcrumb-area rsud-page-hero shadow dark text-light text-center">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 offset-lg-2">

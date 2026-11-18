@@ -15,8 +15,13 @@
         {!! $vars !!}
     }
 
-    .kecamatan-hero {
-        background: linear-gradient(135deg, {{ $theme['dark'] }} 0%, {{ $theme['primary'] }} 42%, {{ $theme['light'] }} 100%) !important;
+    .kecamatan-hero,
+    .breadcrumb-area.rsud-page-hero {
+        background-image: none !important;
+        background:
+            radial-gradient(circle at 12% 20%, rgba(255, 255, 255, 0.14) 0%, transparent 42%),
+            radial-gradient(circle at 88% 75%, rgba(0, 0, 0, 0.18) 0%, transparent 48%),
+            linear-gradient(135deg, {{ $theme['dark'] }} 0%, {{ $theme['primary'] }} 42%, {{ $theme['light'] }} 100%) !important;
     }
 
     body.page-beranda,

@@ -14,12 +14,14 @@ class DokterController extends Controller
     public function index(Request $request): View
     {
         $dokters = Dokter::query()
+            ->with('spesialisasi')
             ->active()
             ->when($request->filled('q'), function ($q) use ($request) {
                 $term = $request->string('q')->toString();
                 $q->where(function ($inner) use ($term) {
                     $inner->where('name', 'like', "%{$term}%")
-                        ->orWhere('specialty', 'like', "%{$term}%");
+                        ->orWhere('specialty', 'like', "%{$term}%")
+                        ->orWhereHas('spesialisasi', fn ($sp) => $sp->where('name', 'like', "%{$term}%"));
                 });
             })
             ->ordered()
@@ -34,7 +36,10 @@ class DokterController extends Controller
         $dokter = Dokter::query()
             ->active()
             ->where('slug', $slug)
-            ->with(['jadwals' => fn ($q) => $q->active()->ordered()])
+            ->with([
+                'spesialisasi',
+                'jadwals' => fn ($q) => $q->active()->ordered(),
+            ])
             ->firstOrFail();
 
         return view('public.dokter.show', compact('dokter'));
@@ -45,7 +50,7 @@ class DokterController extends Controller
         $jadwalsQuery = DokterJadwal::query()
             ->active()
             ->whereHas('dokter', fn ($q) => $q->active())
-            ->with(['dokter' => fn ($q) => $q->active()->ordered()])
+            ->with(['dokter' => fn ($q) => $q->with('spesialisasi')->active()->ordered()])
             ->ordered();
 
         if ($request->filled('dokter_id')) {
@@ -60,7 +65,11 @@ class DokterController extends Controller
 
         $groupedByDay = $jadwals->groupBy('day_of_week')->sortKeys();
 
-        $dokters = Dokter::query()->active()->ordered()->get(['id', 'name', 'slug', 'specialty']);
+        $dokters = Dokter::query()
+            ->with('spesialisasi')
+            ->active()
+            ->ordered()
+            ->get(['id', 'name', 'slug', 'specialty', 'dokter_spesialisasi_id']);
         $dayOptions = DokterDays::DAYS;
 
         return view('public.dokter.jadwal', compact('groupedByDay', 'dokters', 'dayOptions'));

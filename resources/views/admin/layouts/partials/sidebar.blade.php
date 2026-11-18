@@ -101,10 +101,16 @@
                 @endcan
 
                 @can('manage dokter')
-                    <li class="nxl-item {{ request()->routeIs('admin.dokter.*') ? 'active' : '' }}">
+                    <li class="nxl-item {{ request()->routeIs('admin.dokter.*') && ! request()->routeIs('admin.dokter-spesialisasi.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.dokter.index') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-activity"></i></span>
                             <span class="nxl-mtext">Dokter</span>
+                        </a>
+                    </li>
+                    <li class="nxl-item {{ request()->routeIs('admin.dokter-spesialisasi.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.dokter-spesialisasi.index') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-tag"></i></span>
+                            <span class="nxl-mtext">Spesialisasi</span>
                         </a>
                     </li>
                 @endcan

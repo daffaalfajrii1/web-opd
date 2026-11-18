@@ -8,8 +8,28 @@
     </div>
     <div class="col-md-4">
         <label class="fw-semibold">Spesialisasi *</label>
-        <input type="text" name="specialty" class="form-control" value="{{ old('specialty', $item?->specialty) }}" required>
-        @error('specialty')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
+        @if (($spesialisasis ?? collect())->isEmpty())
+            <div class="alert alert-warning mb-2 py-2">
+                Belum ada spesialisasi. <a href="{{ route('admin.dokter-spesialisasi.create') }}" class="fw-semibold">Tambah spesialisasi dulu</a> sebelum menyimpan dokter.
+            </div>
+            <select name="dokter_spesialisasi_id" class="form-select" required disabled>
+                <option value="">— Belum ada spesialisasi —</option>
+            </select>
+        @else
+            <select name="dokter_spesialisasi_id" class="form-select" required>
+                <option value="">— Pilih spesialisasi —</option>
+                @foreach ($spesialisasis as $spesialisasi)
+                    <option value="{{ $spesialisasi->id }}" @selected(old('dokter_spesialisasi_id', $item?->dokter_spesialisasi_id) == $spesialisasi->id)>
+                        {{ $spesialisasi->name }}
+                    </option>
+                @endforeach
+            </select>
+            <div class="form-text">
+                Kelola daftar di
+                <a href="{{ route('admin.dokter-spesialisasi.index') }}">Spesialisasi Dokter</a>.
+            </div>
+        @endif
+        @error('dokter_spesialisasi_id')<div class="text-danger fs-12 mt-1">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-6">
         <label class="fw-semibold">Foto Dokter</label>

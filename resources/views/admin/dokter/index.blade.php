@@ -6,7 +6,7 @@
     @include('admin.components.page-header', [
         'title' => 'Data Dokter',
         'crumbs' => [['label' => 'Dokter']],
-        'actions' => '<a href="'.route('admin.dokter.create').'" class="btn btn-primary"><i class="feather-plus me-2"></i>Tambah Dokter</a>',
+        'actions' => '<a href="'.route('admin.dokter-spesialisasi.index').'" class="btn btn-light-brand me-2"><i class="feather-tag me-2"></i>Spesialisasi</a><a href="'.route('admin.dokter.create').'" class="btn btn-primary"><i class="feather-plus me-2"></i>Tambah Dokter</a>',
     ])
 
     <div class="main-content">
@@ -59,7 +59,7 @@
                                         @endif
                                     </td>
                                     <td class="fw-semibold">{{ $dokter->name }}</td>
-                                    <td>{{ $dokter->specialty }}</td>
+                                    <td>{{ $dokter->specialtyLabel() }}</td>
                                     <td>{{ $dokter->jadwals_count }} jadwal</td>
                                     <td>
                                         <span class="badge {{ $dokter->is_active ? 'bg-soft-success text-success' : 'bg-soft-secondary text-secondary' }}">

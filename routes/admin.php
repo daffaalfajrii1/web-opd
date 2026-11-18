@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\BeritaCategoryController;
 use App\Http\Controllers\Admin\BeritaController;
 use App\Http\Controllers\Admin\DokterController;
+use App\Http\Controllers\Admin\DokterSpesialisasiController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\NavMenuController;
@@ -33,6 +34,10 @@ Route::middleware(['auth', 'verified', PermissionMiddleware::using('view dashboa
 
         Route::middleware(PermissionMiddleware::using('manage dokter'))
             ->group(function () {
+                Route::resource('dokter-spesialisasi', DokterSpesialisasiController::class)
+                    ->parameters(['dokter-spesialisasi' => 'dokterSpesialisasi'])
+                    ->except(['show']);
+
                 Route::post('dokter/{dokter}/jadwal', [DokterController::class, 'storeJadwal'])
                     ->name('dokter.jadwal.store');
 

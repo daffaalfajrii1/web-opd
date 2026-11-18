@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
@@ -12,6 +13,7 @@ class Dokter extends Model
     protected $fillable = [
         'name',
         'slug',
+        'dokter_spesialisasi_id',
         'specialty',
         'photo_path',
         'bio',
@@ -30,6 +32,16 @@ class Dokter extends Model
     public function jadwals(): HasMany
     {
         return $this->hasMany(DokterJadwal::class);
+    }
+
+    public function spesialisasi(): BelongsTo
+    {
+        return $this->belongsTo(DokterSpesialisasi::class, 'dokter_spesialisasi_id');
+    }
+
+    public function specialtyLabel(): string
+    {
+        return $this->spesialisasi?->name ?: (string) $this->specialty;
     }
 
     public function scopeActive(Builder $query): Builder

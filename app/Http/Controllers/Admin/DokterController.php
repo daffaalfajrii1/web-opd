@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\DokterJadwal;
+use App\Models\DokterSpesialisasi;
 use App\Support\DokterDays;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,10 +18,12 @@ class DokterController extends Controller
     public function index(Request $request): View
     {
         $dokters = Dokter::query()
+            ->with('spesialisasi')
             ->withCount('jadwals')
             ->when($request->search, fn ($q, $search) => $q->where(function ($inner) use ($search) {
                 $inner->where('name', 'like', "%{$search}%")
-                    ->orWhere('specialty', 'like', "%{$search}%");
+                    ->orWhere('specialty', 'like', "%{$search}%")
+                    ->orWhereHas('spesialisasi', fn ($sp) => $sp->where('name', 'like', "%{$search}%"));
             }))
             ->when($request->status === 'active', fn ($q) => $q->active())
             ->when($request->status === 'inactive', fn ($q) => $q->where('is_active', false))
@@ -33,17 +36,21 @@ class DokterController extends Controller
 
     public function create(): View
     {
-        return view('admin.dokter.create');
+        return view('admin.dokter.create', [
+            'spesialisasis' => DokterSpesialisasi::query()->active()->ordered()->get(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $this->validateDokter($request);
+        $spesialisasi = DokterSpesialisasi::query()->findOrFail($validated['dokter_spesialisasi_id']);
 
         Dokter::create([
             'name' => $validated['name'],
             'slug' => Dokter::uniqueSlug($validated['name']),
-            'specialty' => $validated['specialty'],
+            'dokter_spesialisasi_id' => $spesialisasi->id,
+            'specialty' => $spesialisasi->name,
             'bio' => $validated['bio'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'photo_path' => $this->storePhoto($request),
@@ -57,17 +64,24 @@ class DokterController extends Controller
 
     public function edit(Dokter $dokter): View
     {
-        $dokter->load(['jadwals' => fn ($q) => $q->ordered()]);
+        $dokter->load(['jadwals' => fn ($q) => $q->ordered(), 'spesialisasi']);
+
+        $spesialisasis = DokterSpesialisasi::query()->active()->ordered()->get();
+        if ($dokter->spesialisasi && $spesialisasis->where('id', $dokter->dokter_spesialisasi_id)->isEmpty()) {
+            $spesialisasis = $spesialisasis->prepend($dokter->spesialisasi)->values();
+        }
 
         return view('admin.dokter.edit', [
             'dokter' => $dokter,
             'dayOptions' => DokterDays::DAYS,
+            'spesialisasis' => $spesialisasis,
         ]);
     }
 
     public function update(Request $request, Dokter $dokter): RedirectResponse
     {
         $validated = $this->validateDokter($request);
+        $spesialisasi = DokterSpesialisasi::query()->findOrFail($validated['dokter_spesialisasi_id']);
 
         $slug = $dokter->slug;
         if ($dokter->name !== $validated['name']) {
@@ -77,7 +91,8 @@ class DokterController extends Controller
         $data = [
             'name' => $validated['name'],
             'slug' => $slug,
-            'specialty' => $validated['specialty'],
+            'dokter_spesialisasi_id' => $spesialisasi->id,
+            'specialty' => $spesialisasi->name,
             'bio' => $validated['bio'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_active' => $request->boolean('is_active'),
@@ -159,7 +174,7 @@ class DokterController extends Controller
     {
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'specialty' => ['required', 'string', 'max:255'],
+            'dokter_spesialisasi_id' => ['required', 'integer', 'exists:dokter_spesialisasis,id'],
             'bio' => ['nullable', 'string'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'photo' => ['nullable', 'image', 'max:2048'],
@@ -167,7 +182,7 @@ class DokterController extends Controller
             'is_active' => ['nullable', 'boolean'],
         ], [], [
             'name' => 'nama dokter',
-            'specialty' => 'spesialisasi',
+            'dokter_spesialisasi_id' => 'spesialisasi',
             'photo' => 'foto dokter',
         ]);
     }

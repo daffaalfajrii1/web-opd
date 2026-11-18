@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="info">
                                     <h4><a href="{{ route('public.dokter.show', $dokter->slug) }}">{{ $dokter->name }}</a></h4>
-                                    <span>{{ $dokter->specialty }}</span>
+                                    <span>{{ $dokter->specialtyLabel() }}</span>
                                 </div>
                             </div>
                         </div>
