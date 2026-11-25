@@ -53,5 +53,11 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('public-form', function (Request $request) {
             return Limit::perMinute(8)->by($request->ip());
         });
+
+        // Feedback pengaduan lebih ketat: pelapor sah hanya butuh 1 pesan
+        // per giliran (menunggu jawaban admin), sisanya adalah spam/probing.
+        RateLimiter::for('pengaduan-feedback', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
     }
 }

@@ -45,7 +45,7 @@ Route::post('/pengaduan/cek-status', [PengaduanController::class, 'lookupStatus'
     ->middleware('throttle:public-form')
     ->name('public.pengaduan.lookup-status');
 Route::post('/pengaduan/feedback', [PengaduanController::class, 'storeFeedback'])
-    ->middleware('throttle:public-form')
+    ->middleware('throttle:pengaduan-feedback')
     ->name('public.pengaduan.feedback');
 Route::get('/pengaduan/{slug}', [PengaduanController::class, 'show'])->name('public.pengaduan.show');
 Route::post('/pengaduan/{slug}', [PengaduanController::class, 'store'])

@@ -48,7 +48,34 @@ class Pengaduan extends Model
 
     public function feedbacks(): HasMany
     {
-        return $this->hasMany(PengaduanFeedback::class)->orderBy('created_at');
+        return $this->hasMany(PengaduanFeedback::class)
+            ->orderBy('created_at')
+            ->orderBy('id');
+    }
+
+    /**
+     * Feedback terakhir thread. Dipakai untuk menahan pelapor agar tidak
+     * mengirim pesan baru sebelum admin menjawab pesan sebelumnya.
+     *
+     * Query bersih tanpa orderBy bawaan relasi feedbacks(), karena
+     * orderBy relasi menimpa latest('id') dan mengembalikan pesan tertua.
+     */
+    public function lastFeedback(): ?PengaduanFeedback
+    {
+        return $this->hasOne(PengaduanFeedback::class)
+            ->orderByDesc('id')
+            ->first();
+    }
+
+    /**
+     * True bila pesan terakhir berasal dari pelapor dan belum dijawab admin.
+     * Pelapor harus menunggu jawaban admin dulu sebelum mengirim lagi.
+     */
+    public function awaitingAdminReply(): bool
+    {
+        $last = $this->lastFeedback();
+
+        return $last !== null && $last->isUser();
     }
 
     public function processor(): BelongsTo

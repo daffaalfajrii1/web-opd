@@ -150,6 +150,17 @@ class PengaduanController extends Controller
                 ]);
         }
 
+        // Cegah spam: balasan pelapor harus menunggu jawaban admin dulu.
+        // Tanpa gerbang ini, satu pelapor bisa mengirim pesan bertubi-tubi
+        // (lihat uji "rate test 1-6" di web produksi).
+        if ($pengaduan->awaitingAdminReply()) {
+            return redirect()
+                ->route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor])
+                ->withErrors([
+                    'message' => 'Balasan Anda sebelumnya sedang menunggu jawaban admin. Mohon tunggu hingga admin membalas sebelum mengirim pesan baru.',
+                ]);
+        }
+
         PengaduanFeedback::create([
             'pengaduan_id' => $pengaduan->id,
             'sender' => PengaduanFeedback::SENDER_USER,

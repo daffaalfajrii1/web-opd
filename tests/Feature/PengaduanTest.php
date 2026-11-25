@@ -218,6 +218,106 @@ class PengaduanTest extends TestCase
         ]);
     }
 
+    public function test_user_must_wait_for_admin_reply_before_next_feedback(): void
+    {
+        $admin = $this->adminUser();
+        $kategori = $this->kategori();
+
+        $pengaduan = Pengaduan::create([
+            'pengaduan_kategori_id' => $kategori->id,
+            'nomor' => PengaduanNomor::generate(),
+            'nama' => 'Siti Rahma',
+            'no_hp' => '081298765432',
+            'isi' => 'Ada kendala antrian.',
+            'status' => Pengaduan::STATUS_BARU,
+            'submitted_at' => now(),
+        ]);
+
+        // Pelapor memverifikasi lalu mengirim feedback pertama.
+        $this->post(route('public.pengaduan.lookup-status'), [
+            'nomor' => $pengaduan->nomor,
+            'no_hp' => '081298765432',
+        ]);
+
+        $this->post(route('public.pengaduan.feedback'), [
+            'nomor' => $pengaduan->nomor,
+            'message' => 'Pesan pertama.',
+        ])->assertRedirect(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]));
+
+        $this->assertDatabaseHas('pengaduan_feedbacks', [
+            'pengaduan_id' => $pengaduan->id,
+            'message' => 'Pesan pertama.',
+        ]);
+
+        // Halaman status menampilkan pemberitahuan menunggu, bukan form.
+        $this->get(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertOk()
+            ->assertSee('menunggu jawaban admin')
+            ->assertDontSee('Tulis balasan Anda');
+
+        // Spam feedback kedua tanpa jawaban admin ditolak.
+        $this->post(route('public.pengaduan.feedback'), [
+            'nomor' => $pengaduan->nomor,
+            'message' => 'rate test 2',
+        ])->assertSessionHasErrors('message');
+
+        $this->post(route('public.pengaduan.feedback'), [
+            'nomor' => $pengaduan->nomor,
+            'message' => 'rate test 3',
+        ])->assertSessionHasErrors('message');
+
+        $this->assertDatabaseMissing('pengaduan_feedbacks', [
+            'pengaduan_id' => $pengaduan->id,
+            'message' => 'rate test 2',
+        ]);
+        $this->assertDatabaseMissing('pengaduan_feedbacks', [
+            'pengaduan_id' => $pengaduan->id,
+            'message' => 'rate test 3',
+        ]);
+
+        // Setelah admin membalas, pelapor bisa mengirim lagi.
+        $this->actingAs($admin)
+            ->post(route('admin.pengaduan.feedback', $pengaduan), [
+                'message' => 'Terima kasih, sedang kami proses.',
+            ])
+            ->assertRedirect(route('admin.pengaduan.show', $pengaduan));
+
+        $this->post(route('public.pengaduan.feedback'), [
+            'nomor' => $pengaduan->nomor,
+            'message' => 'Pesan setelah balasan admin.',
+        ])->assertRedirect(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]));
+
+        $this->assertDatabaseHas('pengaduan_feedbacks', [
+            'pengaduan_id' => $pengaduan->id,
+            'message' => 'Pesan setelah balasan admin.',
+        ]);
+    }
+
+    public function test_feedback_endpoint_is_rate_limited(): void
+    {
+        $kategori = $this->kategori();
+
+        $pengaduan = Pengaduan::create([
+            'pengaduan_kategori_id' => $kategori->id,
+            'nomor' => PengaduanNomor::generate(),
+            'nama' => 'Siti Rahma',
+            'no_hp' => '081298765432',
+            'isi' => 'Ada kendala antrian.',
+            'status' => Pengaduan::STATUS_BARU,
+            'submitted_at' => now(),
+        ]);
+
+        // Melebihi batas 5 permintaan/menit -> ditolak middleware throttle.
+        $responses = collect(range(1, 8))->map(function () use ($pengaduan) {
+            return $this->post(route('public.pengaduan.feedback'), [
+                'nomor' => $pengaduan->nomor,
+                'message' => 'spam',
+            ])->status();
+        });
+
+        $this->assertTrue($responses->contains(429), 'Endpoint feedback harus terkena throttle 429.');
+    }
+
     public function test_pengaduan_nomor_is_random_and_unique(): void
     {
         $kategori = $this->kategori();

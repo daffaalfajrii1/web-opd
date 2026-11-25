@@ -121,15 +121,25 @@
 
                             <div class="bg-light p-4 rounded-1">
                                 <h5 class="mb-3">Balas Feedback</h5>
-                                <form method="post" action="{{ route('public.pengaduan.feedback') }}">
-                                    @csrf
-                                    <input type="hidden" name="nomor" value="{{ $pengaduan->nomor }}">
-                                    <textarea name="message" class="form-control @error('message') is-invalid @enderror" rows="4" required maxlength="5000" placeholder="Tulis balasan Anda...">{{ old('message') }}</textarea>
-                                    @error('message')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <button type="submit" class="btn-main w-100 mt-3"><span>Kirim Balasan</span></button>
-                                </form>
+                                @if ($pengaduan->awaitingAdminReply())
+                                    <div class="alert alert-info d-flex align-items-start gap-2 mb-0">
+                                        <i class="icofont-clock-time mt-1" aria-hidden="true"></i>
+                                        <div>
+                                            <strong>Balasan Anda sudah terkirim.</strong><br>
+                                            Sedang menunggu jawaban admin. Anda dapat mengirim pesan baru setelah admin membalas.
+                                        </div>
+                                    </div>
+                                @else
+                                    <form method="post" action="{{ route('public.pengaduan.feedback') }}">
+                                        @csrf
+                                        <input type="hidden" name="nomor" value="{{ $pengaduan->nomor }}">
+                                        <textarea name="message" class="form-control @error('message') is-invalid @enderror" rows="4" required maxlength="5000" placeholder="Tulis balasan Anda...">{{ old('message') }}</textarea>
+                                        @error('message')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <button type="submit" class="btn-main w-100 mt-3"><span>Kirim Balasan</span></button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>
