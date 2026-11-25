@@ -66,6 +66,64 @@ class Pengaduan extends Model
         return self::STATUSES[$this->status] ?? $this->status;
     }
 
+    /**
+     * Samakan format nomor HP Indonesia: hanya digit, awalan 62 diubah ke 0.
+     * Dipakai untuk verifikasi pelapor tanpa bergantung pada format penulisan.
+     */
+    public static function normalizePhone(?string $value): string
+    {
+        $digits = preg_replace('/\D+/', '', (string) $value) ?? '';
+
+        if ($digits === '') {
+            return '';
+        }
+
+        if (str_starts_with($digits, '62')) {
+            $digits = '0'.substr($digits, 2);
+        }
+
+        return $digits;
+    }
+
+    public function matchesNoHp(?string $value): bool
+    {
+        $expected = self::normalizePhone($this->no_hp);
+        $given = self::normalizePhone($value);
+
+        return $expected !== '' && hash_equals($expected, $given);
+    }
+
+    /**
+     * Tampilkan nomor HP dalam bentuk tersamar agar tidak terekspos penuh
+     * di layar publik (mis. perangkat bersama).
+     */
+    public function maskedNoHp(): string
+    {
+        $digits = self::normalizePhone($this->no_hp);
+        $length = strlen($digits);
+
+        if ($length === 0) {
+            return '—';
+        }
+
+        if ($length <= 4) {
+            return str_repeat('*', $length);
+        }
+
+        $visible = $length >= 8 ? 4 : 2;
+        $suffix = 2;
+        $masked = $length - $visible - $suffix;
+
+        if ($masked < 1) {
+            $visible = $length - $suffix - 1;
+            $masked = 1;
+        }
+
+        return substr($digits, 0, $visible)
+            .str_repeat('*', $masked)
+            .substr($digits, -$suffix);
+    }
+
     public function getRouteKeyName(): string
     {
         return 'nomor';

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pengaduan;
 use App\Models\PengaduanFeedback;
 use App\Models\PengaduanKategori;
+use App\Support\PengaduanAccess;
 use App\Support\PengaduanNomor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,6 +66,9 @@ class PengaduanController extends Controller
             'submitted_at' => now(),
         ]);
 
+        // Pelapor otomatis berhak melihat pengaduannya sendiri di session ini.
+        PengaduanAccess::markVerified($pengaduan->nomor);
+
         return redirect()
             ->route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor])
             ->with('success', 'Pengaduan berhasil dikirim. Harap diingat nomor pengaduannya: '.$pengaduan->nomor);
@@ -73,24 +77,51 @@ class PengaduanController extends Controller
     public function checkStatus(Request $request): View
     {
         $pengaduan = null;
+        $verified = false;
+        $nomor = PengaduanNomor::normalize($request->query('nomor'));
 
-        if ($request->filled('nomor')) {
+        if ($nomor !== '' && PengaduanAccess::isVerified($nomor)) {
             $pengaduan = Pengaduan::query()
                 ->with(['kategori', 'feedbacks.admin'])
-                ->where('nomor', $request->nomor)
+                ->where('nomor', $nomor)
                 ->first();
+
+            $verified = $pengaduan !== null;
         }
 
-        return view('public.pengaduan.check-status', compact('pengaduan'));
+        return view('public.pengaduan.check-status', compact('pengaduan', 'verified', 'nomor'));
     }
 
     public function lookupStatus(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'nomor' => ['required', 'string', 'max:50'],
-        ], [], ['nomor' => 'nomor pengaduan']);
+            'no_hp' => ['required', 'string', 'max:30'],
+        ], [], [
+            'nomor' => 'nomor pengaduan',
+            'no_hp' => 'nomor HP',
+        ]);
 
-        return redirect()->route('public.pengaduan.check-status', ['nomor' => $request->nomor]);
+        $nomor = PengaduanNomor::normalize($validated['nomor']);
+
+        $pengaduan = Pengaduan::query()
+            ->where('nomor', $nomor)
+            ->first();
+
+        // Pesan sengaja sama untuk nomor tidak ada maupun nomor HP salah,
+        // agar nomor pengaduan tidak bisa diverifikasi lewat percobaan berulang.
+        if (! $pengaduan || ! $pengaduan->matchesNoHp($validated['no_hp'])) {
+            return redirect()
+                ->route('public.pengaduan.check-status', ['nomor' => $nomor])
+                ->withInput($request->only('nomor'))
+                ->withErrors([
+                    'no_hp' => 'Nomor pengaduan dan nomor HP tidak cocok. Periksa kembali keduanya.',
+                ]);
+        }
+
+        PengaduanAccess::markVerified($pengaduan->nomor);
+
+        return redirect()->route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]);
     }
 
     public function storeFeedback(Request $request): RedirectResponse
@@ -103,9 +134,21 @@ class PengaduanController extends Controller
             'message' => 'pesan',
         ]);
 
+        $nomor = PengaduanNomor::normalize($validated['nomor']);
+
         $pengaduan = Pengaduan::query()
-            ->where('nomor', $validated['nomor'])
-            ->firstOrFail();
+            ->where('nomor', $nomor)
+            ->first();
+
+        // Jangan bedakan "nomor tidak ada" dan "belum diverifikasi"
+        // agar keberadaan nomor pengaduan tidak bocor.
+        if (! $pengaduan || ! PengaduanAccess::isVerified($pengaduan->nomor)) {
+            return redirect()
+                ->route('public.pengaduan.check-status', ['nomor' => $nomor])
+                ->withErrors([
+                    'no_hp' => 'Verifikasi nomor pengaduan dan nomor HP terlebih dahulu sebelum membalas.',
+                ]);
+        }
 
         PengaduanFeedback::create([
             'pengaduan_id' => $pengaduan->id,

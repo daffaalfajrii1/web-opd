@@ -29,6 +29,7 @@
                 ['key' => 'pengumuman', 'label' => 'Pengumuman', 'icon' => 'feather-bell', 'soft' => 'warning', 'permission' => 'manage pengumuman', 'route' => 'admin.pengumuman.index'],
                 ['key' => 'layanan', 'label' => 'Layanan', 'icon' => 'feather-layers', 'soft' => 'secondary', 'permission' => 'manage layanan', 'route' => 'admin.layanan.index'],
                 ['key' => 'pengajuan_pending', 'label' => 'Pengajuan Baru', 'icon' => 'feather-inbox', 'soft' => 'danger', 'permission' => 'manage layanan', 'route' => 'admin.layanan-pengajuan.index', 'subtitle' => 'total'],
+                ['key' => 'pengaduan_baru', 'label' => 'Pengaduan Baru', 'icon' => 'feather-message-circle', 'soft' => 'danger', 'permission' => 'manage pengaduan', 'route' => 'admin.pengaduan.index', 'subtitle' => 'pengaduan_total'],
                 ['key' => 'profil', 'label' => 'Halaman Profil', 'icon' => 'feather-file', 'soft' => 'primary', 'permission' => 'manage profil', 'route' => 'admin.halaman.index'],
                 ['key' => 'pengguna', 'label' => 'Pengguna', 'icon' => 'feather-users', 'soft' => 'danger', 'permission' => 'manage users', 'route' => 'admin.pengguna.index'],
                 ['key' => 'roles', 'label' => 'Role', 'icon' => 'feather-shield', 'soft' => 'warning', 'permission' => 'manage roles', 'route' => 'admin.roles.index'],
@@ -39,6 +40,9 @@
                         $subtitle = null;
                         if (($stat['subtitle'] ?? null) === 'total' && isset($stats['pengajuan_total'])) {
                             $subtitle = $stats['pengajuan_total'].' total';
+                        }
+                        if (($stat['subtitle'] ?? null) === 'pengaduan_total' && isset($stats['pengaduan'])) {
+                            $subtitle = $stats['pengaduan'].' total';
                         }
                     @endphp
                     <div class="col-xxl-2 col-lg-3 col-md-4 col-6">
@@ -94,8 +98,8 @@
                                         <tr>
                                             <th>Modul</th>
                                             <th class="text-center">Total</th>
-                                            <th class="text-center">Terbit / Aktif</th>
-                                            <th class="text-center">Draft / Nonaktif</th>
+                                            <th class="text-center">Terbit / Aktif / Selesai</th>
+                                            <th class="text-center">Draft / Nonaktif / Baru</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -112,10 +116,10 @@
                                                 </td>
                                                 <td class="text-center fw-semibold">{{ $module['total'] }}</td>
                                                 <td class="text-center">
-                                                    <span class="badge bg-soft-success text-success">{{ $module['published'] }}</span>
+                                                    <span class="badge bg-soft-success text-success" title="{{ $module['published_label'] ?? 'Terbit / Aktif' }}">{{ $module['published'] }}</span>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="badge bg-soft-secondary text-secondary">{{ $module['draft'] }}</span>
+                                                    <span class="badge bg-soft-secondary text-secondary" title="{{ $module['draft_label'] ?? 'Draft / Nonaktif' }}">{{ $module['draft'] }}</span>
                                                 </td>
                                                 <td class="text-end">
                                                     @if (! empty($module['extra']))
@@ -150,6 +154,7 @@
                                 ['permission' => 'manage pengumuman', 'route' => 'admin.pengumuman.index', 'icon' => 'feather-bell', 'label' => 'Pengumuman'],
                                 ['permission' => 'manage layanan', 'route' => 'admin.layanan.index', 'icon' => 'feather-layers', 'label' => 'Layanan Publik'],
                                 ['permission' => 'manage layanan', 'route' => 'admin.layanan-pengajuan.index', 'icon' => 'feather-inbox', 'label' => 'Pengajuan Layanan', 'badge' => $pengajuanSummary['pending'] ?? 0],
+                                ['permission' => 'manage pengaduan', 'route' => 'admin.pengaduan.index', 'icon' => 'feather-message-circle', 'label' => 'Pengaduan Publik', 'badge' => $pengaduanSummary['baru'] ?? 0],
                                 ['permission' => 'manage users', 'route' => 'admin.pengguna.index', 'icon' => 'feather-users', 'label' => 'Pengguna'],
                                 ['permission' => 'manage roles', 'route' => 'admin.roles.index', 'icon' => 'feather-shield', 'label' => 'Role & Permission'],
                             ];
@@ -192,6 +197,34 @@
                             </div>
                             <a href="{{ route('admin.layanan-pengajuan.index') }}" class="btn btn-sm btn-light-brand w-100 mt-3">
                                 Lihat Semua Pengajuan
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($pengaduanSummary)
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between">
+                            <h5 class="mb-0">Status Pengaduan</h5>
+                            @can('manage pengaduan')
+                                <a href="{{ route('admin.pengaduan-kategori.index') }}" class="fs-12 text-primary text-decoration-none">Kategori</a>
+                            @endcan
+                        </div>
+                        <div class="card-body">
+                            <div class="kecamatan-dash-pengajuan">
+                                @foreach ([
+                                    ['key' => 'baru', 'label' => 'Baru', 'soft' => 'warning'],
+                                    ['key' => 'diproses', 'label' => 'Diproses', 'soft' => 'info'],
+                                    ['key' => 'selesai', 'label' => 'Selesai', 'soft' => 'success'],
+                                ] as $item)
+                                    <div class="kecamatan-dash-pengajuan__item">
+                                        <span class="text-muted fs-13">{{ $item['label'] }}</span>
+                                        <span class="badge bg-soft-{{ $item['soft'] }} text-{{ $item['soft'] }}">{{ $pengaduanSummary[$item['key']] }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <a href="{{ route('admin.pengaduan.index') }}" class="btn btn-sm btn-light-brand w-100 mt-3">
+                                Lihat Semua Pengaduan
                             </a>
                         </div>
                     </div>

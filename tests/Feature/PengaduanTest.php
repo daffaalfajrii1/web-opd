@@ -66,29 +66,214 @@ class PengaduanTest extends TestCase
 
         $pengaduan = Pengaduan::query()->first();
         $this->assertNotNull($pengaduan);
-        $this->assertMatchesRegularExpression('/^PGD-\d{4}-\d{6}$/', $pengaduan->nomor);
+        $this->assertMatchesRegularExpression('/^PGD-\d{4}-\d{8}$/', $pengaduan->nomor);
 
         $response->assertRedirect(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]));
         $response->assertSessionHas('success');
+
+        // Pelapor langsung bisa melihat pengaduannya tanpa mengulang verifikasi.
+        $this->get(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertOk()
+            ->assertSee('Proses KTP terlalu lama.');
     }
 
-    public function test_pengaduan_nomor_is_sequential(): void
+    public function test_pengaduan_detail_is_hidden_without_phone_verification(): void
     {
         $kategori = $this->kategori();
 
-        $this->assertSame('PGD-'.now()->year.'-000001', PengaduanNomor::generate());
-
-        Pengaduan::create([
+        $pengaduan = Pengaduan::create([
             'pengaduan_kategori_id' => $kategori->id,
-            'nomor' => 'PGD-'.now()->year.'-000001',
-            'nama' => 'A',
-            'no_hp' => '081',
-            'isi' => 'test',
+            'nomor' => PengaduanNomor::generate(),
+            'nama' => 'Siti Rahma',
+            'no_hp' => '081298765432',
+            'isi' => 'Isi pengaduan rahasia.',
             'status' => Pengaduan::STATUS_BARU,
             'submitted_at' => now(),
         ]);
 
-        $this->assertSame('PGD-'.now()->year.'-000002', PengaduanNomor::generate());
+        // Menebak nomor saja tidak boleh membuka detail.
+        $this->get(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertOk()
+            ->assertDontSee('Isi pengaduan rahasia.')
+            ->assertDontSee('Siti Rahma')
+            ->assertSee('belum dapat ditampilkan');
+    }
+
+    public function test_lookup_requires_matching_phone_number(): void
+    {
+        $kategori = $this->kategori();
+
+        $pengaduan = Pengaduan::create([
+            'pengaduan_kategori_id' => $kategori->id,
+            'nomor' => PengaduanNomor::generate(),
+            'nama' => 'Siti Rahma',
+            'no_hp' => '081298765432',
+            'isi' => 'Isi pengaduan rahasia.',
+            'status' => Pengaduan::STATUS_BARU,
+            'submitted_at' => now(),
+        ]);
+
+        $this->post(route('public.pengaduan.lookup-status'), [
+            'nomor' => $pengaduan->nomor,
+            'no_hp' => '081200000000',
+        ])->assertRedirect(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertSessionHasErrors('no_hp');
+
+        $this->get(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertOk()
+            ->assertDontSee('Isi pengaduan rahasia.');
+    }
+
+    public function test_lookup_accepts_phone_in_different_format(): void
+    {
+        $kategori = $this->kategori();
+
+        $pengaduan = Pengaduan::create([
+            'pengaduan_kategori_id' => $kategori->id,
+            'nomor' => PengaduanNomor::generate(),
+            'nama' => 'Siti Rahma',
+            'no_hp' => '081298765432',
+            'isi' => 'Isi pengaduan rahasia.',
+            'status' => Pengaduan::STATUS_BARU,
+            'submitted_at' => now(),
+        ]);
+
+        $this->post(route('public.pengaduan.lookup-status'), [
+            'nomor' => $pengaduan->nomor,
+            'no_hp' => '+62 812-9876-5432',
+        ])->assertRedirect(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertSessionHasNoErrors();
+
+        $this->get(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertOk()
+            ->assertSee('Isi pengaduan rahasia.');
+    }
+
+    public function test_pengaduan_input_is_escaped_in_public_and_admin_views(): void
+    {
+        $admin = $this->adminUser();
+        $kategori = $this->kategori();
+
+        $payload = '<b>tebal</b> <script>alert(1)</script> "kutip" & <img src=x onerror=alert(2)>';
+
+        $pengaduan = Pengaduan::create([
+            'pengaduan_kategori_id' => $kategori->id,
+            'nomor' => PengaduanNomor::generate(),
+            'nama' => 'Pelapor Uji',
+            'no_hp' => '081298765432',
+            'isi' => $payload,
+            'status' => Pengaduan::STATUS_BARU,
+            'submitted_at' => now(),
+        ]);
+
+        PengaduanFeedback::create([
+            'pengaduan_id' => $pengaduan->id,
+            'sender' => PengaduanFeedback::SENDER_USER,
+            'user_id' => null,
+            'message' => $payload,
+        ]);
+
+        $this->post(route('public.pengaduan.lookup-status'), [
+            'nomor' => $pengaduan->nomor,
+            'no_hp' => '081298765432',
+        ]);
+
+        // Payload harus tampil sebagai teks, bukan HTML aktif.
+        $this->get(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertOk()
+            ->assertDontSee('<script>alert(1)</script>', false)
+            ->assertDontSee('<img src=x onerror=alert(2)>', false)
+            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
+
+        $this->actingAs($admin)
+            ->get(route('admin.pengaduan.show', $pengaduan))
+            ->assertOk()
+            ->assertDontSee('<script>alert(1)</script>', false)
+            ->assertDontSee('<img src=x onerror=alert(2)>', false)
+            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
+    }
+
+    public function test_public_feedback_requires_verified_session(): void
+    {
+        $kategori = $this->kategori();
+
+        $pengaduan = Pengaduan::create([
+            'pengaduan_kategori_id' => $kategori->id,
+            'nomor' => PengaduanNomor::generate(),
+            'nama' => 'Siti Rahma',
+            'no_hp' => '081298765432',
+            'isi' => 'Isi pengaduan rahasia.',
+            'status' => Pengaduan::STATUS_BARU,
+            'submitted_at' => now(),
+        ]);
+
+        $this->post(route('public.pengaduan.feedback'), [
+            'nomor' => $pengaduan->nomor,
+            'message' => 'Balasan tanpa verifikasi.',
+        ])->assertSessionHasErrors('no_hp');
+
+        $this->assertDatabaseMissing('pengaduan_feedbacks', [
+            'pengaduan_id' => $pengaduan->id,
+            'message' => 'Balasan tanpa verifikasi.',
+        ]);
+    }
+
+    public function test_pengaduan_nomor_is_random_and_unique(): void
+    {
+        $kategori = $this->kategori();
+        $nomor = [];
+
+        for ($i = 0; $i < 20; $i++) {
+            $generated = PengaduanNomor::generate();
+
+            $this->assertMatchesRegularExpression('/^PGD-'.now()->year.'-\d{8}$/', $generated);
+            $this->assertNotContains($generated, $nomor, 'Nomor pengaduan tidak boleh berulang.');
+
+            Pengaduan::create([
+                'pengaduan_kategori_id' => $kategori->id,
+                'nomor' => $generated,
+                'nama' => 'Pelapor',
+                'no_hp' => '081234567890',
+                'isi' => 'test',
+                'status' => Pengaduan::STATUS_BARU,
+                'submitted_at' => now(),
+            ]);
+
+            $nomor[] = $generated;
+        }
+
+        // Nomor tidak boleh sekuensial (mis. ...000001, ...000002).
+        $suffixes = array_map(fn (string $n) => (int) substr($n, -PengaduanNomor::RANDOM_DIGITS), $nomor);
+        $sorted = $suffixes;
+        sort($sorted);
+
+        $this->assertNotSame($sorted, $suffixes, 'Nomor pengaduan tidak boleh berurutan.');
+    }
+
+    public function test_legacy_sequential_numbers_still_work(): void
+    {
+        $kategori = $this->kategori();
+
+        // Data lama di database tetap memakai format sekuensial.
+        $pengaduan = Pengaduan::create([
+            'pengaduan_kategori_id' => $kategori->id,
+            'nomor' => 'PGD-'.now()->year.'-000001',
+            'nama' => 'Pelapor Lama',
+            'no_hp' => '081298765432',
+            'isi' => 'Pengaduan lama.',
+            'status' => Pengaduan::STATUS_BARU,
+            'submitted_at' => now(),
+        ]);
+
+        $this->post(route('public.pengaduan.lookup-status'), [
+            'nomor' => $pengaduan->nomor,
+            'no_hp' => '081298765432',
+        ])->assertRedirect(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertSessionHasNoErrors();
+
+        $this->get(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]))
+            ->assertOk()
+            ->assertSee('Pengaduan lama.');
     }
 
     public function test_admin_and_user_can_exchange_feedback_by_nomor(): void
@@ -119,6 +304,12 @@ class PengaduanTest extends TestCase
         ]);
 
         $this->assertSame(Pengaduan::STATUS_DIPROSES, $pengaduan->fresh()->status);
+
+        // Pelapor memverifikasi nomor + no HP, lalu membalas feedback.
+        $this->post(route('public.pengaduan.lookup-status'), [
+            'nomor' => $pengaduan->nomor,
+            'no_hp' => '08111',
+        ])->assertRedirect(route('public.pengaduan.check-status', ['nomor' => $pengaduan->nomor]));
 
         $this->post(route('public.pengaduan.feedback'), [
             'nomor' => $pengaduan->nomor,

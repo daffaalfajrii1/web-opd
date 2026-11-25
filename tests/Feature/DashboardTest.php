@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Agenda;
 use App\Models\Berita;
 use App\Models\BeritaCategory;
+use App\Models\Pengaduan;
+use App\Models\PengaduanKategori;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
@@ -21,9 +23,9 @@ class DashboardTest extends TestCase
 
         foreach ([
             'view dashboard', 'manage berita', 'manage agenda', 'manage layanan',
-            'manage pengaturan', 'manage users', 'manage roles',
+            'manage pengaduan', 'manage pengaturan', 'manage users', 'manage roles',
         ] as $permission) {
-            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            Permission::findOrCreate($permission, 'web');
         }
 
         Role::create(['name' => 'super-admin', 'guard_name' => 'web']);
@@ -71,6 +73,53 @@ class DashboardTest extends TestCase
         $response->assertSee('Agenda Mendatang');
         $response->assertSee('Status Pengajuan');
         $response->assertSee('Pengajuan Baru');
+    }
+
+    public function test_dashboard_shows_pengaduan_summary_for_authorized_user(): void
+    {
+        $user = $this->superAdmin();
+
+        $kategori = PengaduanKategori::create([
+            'name' => 'Pelayanan',
+            'slug' => 'pelayanan',
+            'is_active' => true,
+            'sort_order' => 0,
+        ]);
+
+        foreach (['baru', 'diproses', 'selesai'] as $status) {
+            Pengaduan::create([
+                'pengaduan_kategori_id' => $kategori->id,
+                'nomor' => 'PGD-'.now()->year.'-'.str_pad((string) (Pengaduan::count() + 1), 6, '0', STR_PAD_LEFT),
+                'nama' => 'Pelapor '.$status,
+                'no_hp' => '08123456789',
+                'isi' => 'Isi pengaduan',
+                'status' => $status,
+                'submitted_at' => now(),
+            ]);
+        }
+
+        $response = $this->actingAs($user)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('Pengaduan Baru');
+        $response->assertSee('Status Pengaduan');
+        $response->assertSee('Lihat Semua Pengaduan');
+        $response->assertSee('Pengaduan Publik');
+    }
+
+    public function test_dashboard_hides_pengaduan_panel_without_permission(): void
+    {
+        Permission::findOrCreate('view dashboard', 'web');
+        Permission::findOrCreate('manage berita', 'web');
+
+        $user = User::factory()->create(['email_verified_at' => now()]);
+        $user->givePermissionTo(['view dashboard', 'manage berita']);
+
+        $response = $this->actingAs($user)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $response->assertDontSee('Status Pengaduan');
+        $response->assertDontSee('Pengaduan Publik');
     }
 
     public function test_user_without_dashboard_permission_cannot_access(): void

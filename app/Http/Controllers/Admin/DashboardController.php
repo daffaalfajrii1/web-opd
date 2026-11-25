@@ -10,6 +10,7 @@ use App\Models\Layanan;
 use App\Models\LayananPengajuan;
 use App\Models\Page;
 use App\Models\Pegawai;
+use App\Models\Pengaduan;
 use App\Models\Pengumuman;
 use App\Models\User;
 use App\Models\WebsiteSetting;
@@ -28,6 +29,7 @@ class DashboardController extends Controller
             'stats' => $this->buildStats($user),
             'moduleSummaries' => $this->buildModuleSummaries($user),
             'pengajuanSummary' => $user->can('manage layanan') ? $this->pengajuanSummary() : null,
+            'pengaduanSummary' => $user->can('manage pengaduan') ? $this->pengaduanSummary() : null,
             'upcomingAgendas' => $user->can('manage agenda')
                 ? Agenda::query()->upcoming()->limit(5)->get()
                 : collect(),
@@ -65,6 +67,10 @@ class DashboardController extends Controller
         }
         if ($user->can('manage users')) {
             $stats['pengguna'] = User::count();
+        }
+        if ($user->can('manage pengaduan')) {
+            $stats['pengaduan'] = Pengaduan::count();
+            $stats['pengaduan_baru'] = Pengaduan::status(Pengaduan::STATUS_BARU)->count();
         }
         if ($user->can('manage roles')) {
             $stats['roles'] = Role::where('guard_name', 'web')->count();
@@ -153,6 +159,21 @@ class DashboardController extends Controller
             ];
         }
 
+        if ($user->can('manage pengaduan')) {
+            $summaries[] = [
+                'label' => 'Pengaduan Publik',
+                'icon' => 'feather-message-circle',
+                'soft' => 'danger',
+                'route' => 'admin.pengaduan.index',
+                'total' => Pengaduan::count(),
+                'published' => Pengaduan::status(Pengaduan::STATUS_SELESAI)->count(),
+                'draft' => Pengaduan::status(Pengaduan::STATUS_BARU)->count(),
+                'published_label' => 'Selesai',
+                'draft_label' => 'Baru',
+                'extra' => Pengaduan::status(Pengaduan::STATUS_DIPROSES)->count().' diproses',
+            ];
+        }
+
         return $summaries;
     }
 
@@ -165,6 +186,17 @@ class DashboardController extends Controller
             'completed' => LayananPengajuan::where('status', LayananPengajuan::STATUS_COMPLETED)->count(),
             'rejected' => LayananPengajuan::where('status', LayananPengajuan::STATUS_REJECTED)->count(),
             'total' => LayananPengajuan::count(),
+        ];
+    }
+
+    /** @return array<string, int> */
+    private function pengaduanSummary(): array
+    {
+        return [
+            'baru' => Pengaduan::status(Pengaduan::STATUS_BARU)->count(),
+            'diproses' => Pengaduan::status(Pengaduan::STATUS_DIPROSES)->count(),
+            'selesai' => Pengaduan::status(Pengaduan::STATUS_SELESAI)->count(),
+            'total' => Pengaduan::count(),
         ];
     }
 
@@ -253,6 +285,33 @@ class DashboardController extends Controller
                         statusSoft: $statusSoft,
                         date: $item->submitted_at ?? $item->created_at,
                         route: route('admin.layanan-pengajuan.show', $item),
+                    ));
+                });
+        }
+
+        if ($user->can('manage pengaduan')) {
+            Pengaduan::query()
+                ->with('kategori:id,name')
+                ->latest('submitted_at')
+                ->limit(5)
+                ->get()
+                ->each(function (Pengaduan $item) use ($activities) {
+                    $statusSoft = match ($item->status) {
+                        Pengaduan::STATUS_BARU => 'warning',
+                        Pengaduan::STATUS_DIPROSES => 'info',
+                        Pengaduan::STATUS_SELESAI => 'success',
+                        default => 'secondary',
+                    };
+
+                    $activities->push($this->activityItem(
+                        module: 'Pengaduan',
+                        icon: 'feather-message-circle',
+                        soft: 'danger',
+                        title: $item->nomor.' — '.($item->kategori?->name ?? 'Pengaduan'),
+                        status: $item->statusLabel(),
+                        statusSoft: $statusSoft,
+                        date: $item->submitted_at ?? $item->created_at,
+                        route: route('admin.pengaduan.show', $item),
                     ));
                 });
         }
